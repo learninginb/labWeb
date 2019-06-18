@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.KnowledgeCollectionDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.knowledge.KnowledgeCollection">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="knowledge_id" property="knowledgeId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="is_valid" property="isValid" jdbcType="INTEGER" />
+		<result column="collection_time" property="collectionTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+    <resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.knowledge.KnowledgeCollectionVo">
+
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,knowledge_id,user_id,is_valid,collection_time
+	</sql>
+
+	 <!-- 分页数据 -->    
+	<select id="findListByPage" resultMap="BaseResultVoMap" parameterType="com.simulation.vo.knowledge.KnowledgeCollectionVo">
+  		select 
+  		<include refid="Base_Column_List" />
+  	      from t_knowledge_collection where 1=1 
+		  	<if test="vo.id != null ">and id = #{ vo.id }</if>
+		  	<if test="vo.knowledgeId != null ">and knowledge_id = #{ vo.knowledgeId }</if>
+		  	<if test="vo.userId != null ">and user_id = #{ vo.userId }</if>
+		  	<if test="vo.isValid != null ">and is_valid = #{ vo.isValid }</if>
+		  	<if test="vo.collectionTime != null ">and collection_time = #{ vo.collectionTime }</if>
+  	</select>      
+  
+	<!-- 根据主键获取对象 -->  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_knowledge_collection
+	  where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取表所有数据 -->    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+      from t_knowledge_collection
+    </select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	  delete from t_knowledge_collection
+	  where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.knowledge.KnowledgeCollection" useGeneratedKeys="true" keyProperty="id">
+       insert into t_knowledge_collection (
+		id,knowledge_id,user_id,is_valid,collection_time)values ( 
+		#{id,jdbcType=INTEGER},#{knowledgeId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},#{isValid,jdbcType=INTEGER},#{collectionTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.knowledge.KnowledgeCollection" useGeneratedKeys="true" keyProperty="id" >
+	   insert into t_knowledge_collection
+ 		<trim prefix="(" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">id,</if>
+	  		<if test="knowledgeId != null ">knowledge_id,</if>
+	  		<if test="userId != null ">user_id,</if>
+	  		<if test="isValid != null ">is_valid,</if>
+	  		<if test="collectionTime != null ">collection_time,</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+	  		<if test="knowledgeId != null ">#{knowledgeId,jdbcType=INTEGER},</if>
+	  		<if test="userId != null ">#{userId,jdbcType=INTEGER},</if>
+	  		<if test="isValid != null ">#{isValid,jdbcType=INTEGER},</if>
+	  		<if test="collectionTime != null ">#{collectionTime,jdbcType=TIMESTAMP},</if>
+ 		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.knowledge.KnowledgeCollection" >
+	   update t_knowledge_collection
+		<set >
+			<if test="id != null ">
+		  	id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="knowledgeId != null ">
+		  	knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null ">
+		  	user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="isValid != null ">
+		  	is_valid = #{isValid,jdbcType=INTEGER},
+			</if>
+			<if test="collectionTime != null ">
+		  	collection_time = #{collectionTime,jdbcType=TIMESTAMP},
+			</if>
+	    </set>
+	   where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	 <!-- 根据对象主键更新 -->    
+  	<update id="updateByPrimaryKey" parameterType="com.simulation.model.knowledge.KnowledgeCollection" >
+       update t_knowledge_collection
+       set 
+	      id = #{id,jdbcType=INTEGER},
+	      knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+	      user_id = #{userId,jdbcType=INTEGER},
+	      is_valid = #{isValid,jdbcType=INTEGER},
+	      collection_time = #{collectionTime,jdbcType=TIMESTAMP}
+	   where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.simulation.model.knowledge.KnowledgeCollection" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_knowledge_collection where 1=1
+			<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="knowledgeId != null ">
+			AND  knowledge_id = #{knowledgeId,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null ">
+			AND  user_id = #{userId,jdbcType=INTEGER}
+			</if>
+			<if test="isValid != null ">
+			AND  is_valid = #{isValid,jdbcType=INTEGER}
+			</if>
+			<if test="collectionTime != null ">
+			AND  collection_time = #{collectionTime,jdbcType=TIMESTAMP}
+			</if>
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteByIds" >
+	   delete from t_knowledge_collection
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+	</delete>
+	
+	<!-- 根据knowledgeid，userid取消收藏 -->    
+  	<update id="cancelByKnowledgeId" parameterType="com.simulation.model.knowledge.KnowledgeCollection" >
+       update t_knowledge_collection
+       set 
+	      is_valid = #{valid,jdbcType=INTEGER}
+	   where knowledge_id = #{knowledgeId,jdbcType=INTEGER}
+  	</update>
+  	
+  	<!-- 通过knowledgeid获取对象 -->  
+	<select id="findByKnowledgeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_knowledge_collection
+	  where knowledge_id = #{knowledgeId,jdbcType=INTEGER}
+	</select>
+</mapper>   

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.CommentDao">
+    <resultMap type="com.simulation.model.knowledge.Comment" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="user_id" jdbcType="INTEGER"/>
+        <result column="paper_id" property="paper_id" jdbcType="INTEGER"/>
+        <result column="comment" property="comment" jdbcType="VARCHAR"/>
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
+       <result column="update_time" property="update_time" jdbcType="TIMESTAMP"/>
+       <result column="status" property="status" jdbcType="VARCHAR"/>
+       <result column="praise_count" property="praise_count" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap type="com.simulation.vo.knowledge.CommentVo" id="BaseResultVoMap" extends="BaseResultMap">
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="paper_name" property="paperName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="findCommentById" parameterType="Integer" resultMap="BaseResultMap">
+		select * from t_comment
+		where id = #{id}        
+    </select>
+    
+    <select id="getCommentCount" resultType="Integer">
+        select count(c.id) from t_comment c,t_paper p
+        where  c.paper_id = p.id 
+		<choose>
+		    <when test="paperId!=null">
+		        and paper_id = #{paperId}
+		    </when>
+		    <otherwise>
+		        <if test="paperName!=null and paperName!=''">
+		            and paper_name = #{paperName}
+		        </if>
+		    </otherwise>
+		</choose>            
+    </select>
+    
+    <select id="getMyCommentCount" resultType="Integer">
+        select count(c.id) from t_comment c,t_paper p
+        where c.paper_id = p.id and c.user_id = #{vo.user_id}
+        <if test="vo.paperName!=null and vo.paperName!=''">
+            and p.name like '%${vo.paperName}%'
+        </if>
+        <if test="keyWordList!=null and keyWordList.size()!=0">
+            <foreach collection="keyWordList" item="keyWord" index="index" open="and" separator="and">
+                key_word like '%${keyWord}%'
+            </foreach>
+        </if>
+    </select>
+    
+    <!-- 文献评论分页查找 -->
+   <select id="findpage" resultMap="BaseResultVoMap">
+        select c.*,p.name paper_name,u.user_name user_name 
+        from t_comment c,t_sys_user u,t_paper p
+        where c.user_id=u.id and p.id = c.paper_id
+        <if test="vo.user_id!=null and vo.user_id!=0">
+            and u.id = #{vo.user_id}
+        </if>
+        <choose>
+            <when test="vo.paper_id!=null and vo.paper_id!=0">
+                and p.id = #{vo.paper_id}
+            </when>
+            <otherwise>
+				<if test="vo.paperName!=null and vo.paperName!=''">
+				    and p.name like '%${vo.paperName}%'
+				</if>
+				<if test="keyWordList!=null and keyWordList.size()!=0">
+					<foreach collection="keyWordList" index="index" item="keyword" open="and" separator="and">
+					   key_word like '%${keyword}%'
+					</foreach>    
+				</if>
+				
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="hot">
+                order by c.praise_count desc
+            </when>
+            <otherwise>
+                order by c.create_time desc
+            </otherwise>
+        </choose>
+        limit ${page.getFirstResult()},${page.getPageSize()};
+   </select>
+    
+    <select id="findHotComment" resultMap="BaseResultVoMap" parameterType="Integer">
+        select c.*,p.name paper_name,u.user_name user_name 
+        from t_comment c,t_sys_user u,t_paper p
+        where 1=1 and c.user_id=u.id and p.id = c.paper_id
+        <if test="paperId!=null">and c.paper_id=#{ paperId} ORDER BY c.praise_count DESC LIMIT 0,10;</if>
+        
+    </select>
+    
+    <select id="findPraiseCount" parameterType="Integer" resultType="Integer">
+        select praise_count from t_comment
+        where 1=1 
+        <if test="commentId!=null">
+           and id = #{commentId}
+        </if>
+    </select>
+    
+    <!--查询点赞记录是否存在  -->
+    <select id="praiseIsExit" resultType="Integer">
+        select IFNULL((select id from t_comment_praise_history
+        where comment_id = #{commentId} and user_id = #{userId} limit 1),0) as id;
+    </select>
+    
+    <insert id="addComment" parameterType="com.simulation.model.knowledge.Comment">
+        insert into t_comment (
+        user_id,comment,create_time,update_time,paper_id,status,praise_count)
+        values(
+        #{comment.user_id,jdbcType=INTEGER},
+        #{comment.comment,jdbcType=VARCHAR},
+        #{comment.create_time,jdbcType=TIMESTAMP},
+        #{comment.update_time,jdbcType=TIMESTAMP},
+        #{comment.paper_id,jdbcType=INTEGER},
+        #{comment.status,jdbcType=VARCHAR},
+        #{comment.praise_count,jdbcType=INTEGER}
+        )
+        
+    </insert>
+    
+    <!-- 点赞 -->
+    <update id="addPraise" parameterType="Integer">
+        update t_comment
+            set praise_count = praise_count+1
+        where 1=1   and id = #{commentId}
+        
+    </update>
+    
+   <insert id="addHistory">
+       insert into t_comment_praise_history(comment_id,user_id)
+       values(
+       #{commentId,jdbcType=INTEGER},
+       #{userId,jdbcType=INTEGER}
+       )
+   </insert>
+    
+    <!-- 取消点赞 -->
+    <update id="subtractPraise" parameterType="Integer">
+         update t_comment
+            set praise_count = praise_count-1
+        where 1=1   and id = #{commentId}
+    </update>
+    
+    <delete id="deleteComment" parameterType="Integer">
+        delete from t_comment where id = #{commentId}
+    </delete>
+    
+    <!-- 修改 -->
+    <update id="editMyCommentById" parameterType="com.simulation.model.knowledge.Comment">
+        update t_comment set id=id 
+        <if test="comment.comment!=null and comment.comment!='' and comment.id!=null and comment.id!=0">
+            , `comment` = #{comment.comment}
+            where id = #{comment.id}
+        </if>
+        
+    </update>
+    
+    <!-- 删除点赞记录 -->
+    <delete id="deleteHistory">
+        delete from t_comment_praise_history
+        where comment_id=#{commentId} and user_id = #{userId}
+    </delete>
+    
+</mapper>

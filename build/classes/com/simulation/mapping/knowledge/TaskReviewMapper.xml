@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.TaskReviewDao">
+	<insert id="addTaskReview" parameterType="com.simulation.vo.knowledge.TaskReviewVo">
+	    insert into t_task_review(task_id,description,create_time,file_url)
+	    values(
+	     <if test="vo.taskId!=null and vo.taskId!=0">
+            #{vo.taskId,jdbcType=INTEGER},
+        </if>
+        <if test="vo.description!=null and vo.description!=''">
+            #{vo.description,jdbcType=VARCHAR},
+        </if>
+         <if test="vo.createTime!=null">
+            #{vo.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="vo.fileUrl!=null and vo.fileUrl!=''">
+            #{vo.fileUrl,jdbcType=VARCHAR}
+        </if>
+	    )
+	</insert>
+	<select id="findReviewByTaskId" parameterType="com.simulation.vo.knowledge.TaskReviewVo" resultType="com.simulation.vo.knowledge.TaskReviewVo">
+	    SELECT tr.id,task_id taskId,p.theme taskTheme,tr.description,tr.create_time createTime,tr.file_url FileUrl,u1.user_name distributor,u2.user_name executor
+	    from t_task_review tr,t_task_plantask p,t_sys_user u1,t_sys_user u2
+	    WHERE task_id=#{vo.taskId} and task_id=p.id and p.distributor_id=u1.id and p.executor_id=u2.id 
+		ORDER BY createTime DESC
+		LIMIT 1;
+	</select>
+</mapper>

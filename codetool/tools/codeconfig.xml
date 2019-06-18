@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<generatorConfiguration>
+
+	<!-- 数据库连接信息  dbType 数据库类型 schema 数据库名 connectURL 数据库连接地址 userId 用户名 password 用户密码 -->
+	<jdbcConnection dbType="mysql" schema="foxtail" 
+	connectURL="jdbc:mysql://127.0.0.1:3306/foxtail" userId="root" password="123456"/>
+	 
+	<!-- 数据库类型解析java类型配置 -->
+	<javaTypeResolver>
+		<!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer true，把JDBC DECIMAL 
+		和 NUMERIC 类型解析为java.math.BigDecimal -->
+		<property name="forceBigDecimals" value="false" />
+	</javaTypeResolver>
+
+	<!-- 项目的配置文件设置   web.xml 文件名称  flag 是否生成并覆盖 ftl 文件模板位置-->
+	<projectConfigSetting>
+		
+	</projectConfigSetting>
+
+	<!-- 生成文件配置 -->
+	<packageAndTypeSetting>
+		<!-- name 表示没有实际的意义，但是要有唯一性 ,该属性不能修改 targetProject 生成的项目位置  targetPackage 生成的包位置 flag 是否生成，用于有一些特使情况只需要生成某些类，不需要全部生成 -->
+		<package name="domainFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\src\\java\\main" targetPackage="com.foxtail.model" ftl="java/domain.ftl" flag="true"/>
+		<package name="controllerFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\src\\java\\main" targetPackage="com.foxtail.controller.admin" ftl="java/controller.ftl" flag="true"/>
+		<package name="serviceFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\src\\java\\main" targetPackage="com.foxtail.service" ftl="java/service.ftl" flag="true" />
+		<package name="serviceImplFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\src\\java\\main" targetPackage="com.foxtail.service" ftl="java/serviceImpl.ftl" flag="true"/>
+		<package name="daoFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\src\\java\\main" targetPackage="com.foxtail.dao.mybatis" ftl="java/dao.ftl" flag="true" />
+		<package name="mapperFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\src\\java\\main" targetPackage="com.foxtail.mapping" ftl="java/mapper.ftl" flag="true"/>
+		<package name="voFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\src\\java\\main" targetPackage="com.foxtail.vo" ftl="java/vo.ftl" flag="true"/>
+	</packageAndTypeSetting>
+
+	<!-- jsp页面设置 -->
+	<jspSetting >
+	<!-- targetProject 框架生成位置 style 框架的类型 version 版本 flag 是否覆盖生成-->
+		<modelSetting  targetProject="E:\\test" style="bootstrap" version="1.0" flag="true" /> 
+		<page name="jsp_addFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\WebContent\\jsp" targetPackage="" ftl="jsp/jspTemplate_add.ftl" flag="true"/>
+		<page name="jsp_editFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\WebContent\\jsp" targetPackage="" ftl="jsp/jspTemplate_edit.ftl" flag="true"/>
+		<page name="jsp_listFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\WebContent\\jsp" targetPackage="" ftl="jsp/jspTemplate_list.ftl" flag="true"/>
+		<page name="jsp_viewFtl" targetProject="E:\\workspaces\\myeclipse\\yhact\\WebContent\\jsp" targetPackage="" ftl="jsp/jspTemplate_view.ftl" flag="true"/>
+
+	</jspSetting>
+
+	<!-- 生成基础模块的表-->
+	<baseDbGenerate>
+		<config name="table" flag="false" /><!-- 是否产生table -->
+		
+	</baseDbGenerate>
+
+	<tableSetting>
+		<!-- name数据表名 module 模块名 domainName 对应实体名 aliasName 数据库表名对应的别名,comment表的注释，需要自己定义，不从数据库中读取，用于生成各模块的注释 -->		
+		<table name="t_knowledge_comment" module="knowledge" domain="KnowledgeComment" aliasName="未用到" comment="未用到"/>
+	</tableSetting>
+
+</generatorConfiguration>
+<!-- 请购买正版支持更多功能https://shop106571874.taobao.com/?spm=2013.1.1000126.d21.ysGLAa-->
+<!-- qq:983150316 -->

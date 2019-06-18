@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.sys.SysRoleDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.sys.SysRole">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="role_type" property="roleType" jdbcType="INTEGER" />
+		<result column="role_status" property="roleStatus" jdbcType="INTEGER" />
+		<result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+	</resultMap>
+    <resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.sys.SysRoleVo">
+
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,role_name,role_type,role_status,create_user_id,create_time,modify_user_id,modify_time,role_desc
+	</sql>
+
+	 <!-- 分页数据 -->    
+	<select id="findListByPage" resultMap="BaseResultVoMap" parameterType="com.simulation.vo.sys.SysRoleVo">
+  		select 
+  		<include refid="Base_Column_List" />
+  	      from t_sys_role where 1=1 
+		  	<if test="vo.id != null ">and id = #{ vo.id }</if>
+  	        <if test="vo.roleName != null and '' != vo.roleName ">and role_name like CONCAT('%',#{ vo.roleName },'%') </if>
+		  	<if test="vo.roleType != null ">and role_type = #{ vo.roleType }</if>
+		  	<if test="vo.roleStatus != null ">and role_status = #{ vo.roleStatus }</if>
+		  	<if test="vo.createUserId != null ">and create_user_id = #{ vo.createUserId }</if>
+		  	<if test="vo.createTime != null ">and create_time = #{ vo.createTime }</if>
+		  	<if test="vo.modifyUserId != null ">and modify_user_id = #{ vo.modifyUserId }</if>
+		  	<if test="vo.modifyTime != null ">and modify_time = #{ vo.modifyTime }</if>
+  	        <if test="vo.roleDesc != null and '' != vo.roleDesc ">and role_desc = #{ vo.roleDesc }</if>
+  	</select>      
+  
+	<!-- 根据主键获取对象 -->  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_sys_role
+	  where id = #{id,jdbcType=INTEGER}
+	</select>	
+
+	 <!-- 获取表所有数据 -->    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+      from t_sys_role
+    </select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	  delete from t_sys_role
+	  where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.sys.SysRole" useGeneratedKeys="true" keyProperty="id">
+       insert into t_sys_role (
+		id,role_name,role_type,role_status,create_user_id,create_time,modify_user_id,modify_time,role_desc)values ( 
+		#{id,jdbcType=INTEGER},#{roleName,jdbcType=VARCHAR},#{roleType,jdbcType=INTEGER},#{roleStatus,jdbcType=INTEGER},#{createUserId,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{modifyUserId,jdbcType=INTEGER},#{modifyTime,jdbcType=TIMESTAMP},#{roleDesc,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.sys.SysRole" useGeneratedKeys="true" keyProperty="id" >
+	   insert into t_sys_role
+ 		<trim prefix="(" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">id,</if>
+	  		<if test="roleName != null ">role_name,</if>
+	  		<if test="roleType != null ">role_type,</if>
+	  		<if test="roleStatus != null ">role_status,</if>
+	  		<if test="createUserId != null ">create_user_id,</if>
+	  		<if test="createTime != null ">create_time,</if>
+	  		<if test="modifyUserId != null ">modify_user_id,</if>
+	  		<if test="modifyTime != null ">modify_time,</if>
+	  		<if test="roleDesc != null ">role_desc,</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+	  		<if test="roleName != null ">#{roleName,jdbcType=VARCHAR},</if>
+	  		<if test="roleType != null ">#{roleType,jdbcType=INTEGER},</if>
+	  		<if test="roleStatus != null ">#{roleStatus,jdbcType=INTEGER},</if>
+	  		<if test="createUserId != null ">#{createUserId,jdbcType=INTEGER},</if>
+	  		<if test="createTime != null ">#{createTime,jdbcType=TIMESTAMP},</if>
+	  		<if test="modifyUserId != null ">#{modifyUserId,jdbcType=INTEGER},</if>
+	  		<if test="modifyTime != null ">#{modifyTime,jdbcType=TIMESTAMP},</if>
+	  		<if test="roleDesc != null ">#{roleDesc,jdbcType=VARCHAR},</if>
+ 		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.sys.SysRole" >
+	   update t_sys_role
+		<set >
+			<if test="id != null ">
+		  	id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="roleName != null ">
+		  	role_name = #{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="roleType != null ">
+		  	role_type = #{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="roleStatus != null ">
+		  	role_status = #{roleStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createUserId != null ">
+		  	create_user_id = #{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null ">
+		  	create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserId != null ">
+		  	modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+			</if>
+			<if test="modifyTime != null ">
+		  	modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="roleDesc != null ">
+		  	role_desc = #{roleDesc,jdbcType=VARCHAR},
+			</if>
+	    </set>
+	   where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	 <!-- 根据对象主键更新 -->    
+  	<update id="updateByPrimaryKey" parameterType="com.simulation.model.sys.SysRole" >
+       update t_sys_role
+       set 
+	      id = #{id,jdbcType=INTEGER},
+	      role_name = #{roleName,jdbcType=VARCHAR},
+	      role_type = #{roleType,jdbcType=INTEGER},
+	      role_status = #{roleStatus,jdbcType=INTEGER},
+	      create_user_id = #{createUserId,jdbcType=INTEGER},
+	      create_time = #{createTime,jdbcType=TIMESTAMP},
+	      modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+	      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+	      role_desc = #{roleDesc,jdbcType=VARCHAR}
+	   where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.simulation.model.sys.SysRole" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_sys_role where 1=1
+			<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="roleName != null and '' != roleName ">
+			AND  role_name = #{roleName,jdbcType=VARCHAR}
+			</if>
+			<if test="roleType != null ">
+			AND  role_type = #{roleType,jdbcType=INTEGER}
+			</if>
+			<if test="roleStatus != null ">
+			AND  role_status = #{roleStatus,jdbcType=INTEGER}
+			</if>
+			<if test="createUserId != null ">
+			AND  create_user_id = #{createUserId,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null ">
+			AND  create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyUserId != null ">
+			AND  modify_user_id = #{modifyUserId,jdbcType=INTEGER}
+			</if>
+			<if test="modifyTime != null ">
+			AND  modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="roleDesc != null and '' != roleDesc ">
+			AND  role_desc = #{roleDesc,jdbcType=VARCHAR}
+			</if>
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteByIds" >
+	   delete from t_sys_role
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+	</delete>
+	
+	<!-- 根据用户id查找用户的所有的角色 -->
+	<select id="findRoleTypesByUserId" resultType="java.lang.String" parameterType="java.lang.Integer">
+		SELECT DISTINCT t.role_type  FROM t_sys_role t LEFT JOIN t_sys_user_role r
+		ON t.id=r.role_id 
+		WHERE t.role_status=1 and r.user_id	=#{userId,jdbcType=INTEGER}
+	</select>
+	
+	
+	
+	
+</mapper>   

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.NewsCommentDao">
+    <resultMap id="BaseResultMap" type="com.simulation.model.knowledge.NewsComment">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="news_id" property="newsId" jdbcType="INTEGER"/>
+        <result column="author" property="author" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="insertComment" parameterType="com.simulation.model.knowledge.NewsComment">
+        insert into t_news_comment (news_id,author,email,content,create_time)
+        value (
+            #{comment.newsId},
+            #{comment.author},
+            #{comment.email},
+            #{comment.content},
+            #{comment.createTime}
+        )
+    </insert>
+
+    <select id="findCommentByNewsId" parameterType="Integer" resultMap="BaseResultMap">
+        select * from t_news_comment
+        where news_id = #{newsId}
+        <if test="page!=null">
+            limit page.pageNo,page.pageSize
+        </if>
+        limit 3
+    </select>
+</mapper>

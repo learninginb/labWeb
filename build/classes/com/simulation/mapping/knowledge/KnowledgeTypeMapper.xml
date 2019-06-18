@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.KnowledgeTypeDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.knowledge.KnowledgeType">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="knowledge_type" property="knowledgeType" jdbcType="VARCHAR" />
+		<result column="knowledge_type_desc" property="knowledgeTypeDesc" jdbcType="VARCHAR" />
+		<result column="knowledge_type_state" property="knowledgeTypeState" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+    <resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.knowledge.KnowledgeTypeVo">
+		<result column="parent_name" property="parentName" jdbcType="VARCHAR" />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,parent_id,knowledge_type,knowledge_type_desc,knowledge_type_state,create_time,modify_time
+	</sql>
+
+	 <!-- 分页数据 -->    
+	<select id="findListByPage" resultMap="BaseResultVoMap" parameterType="com.simulation.vo.knowledge.KnowledgeTypeVo">
+  		select 
+  		<include refid="Base_Column_List" />
+  	      from t_knowledge_type where 1=1 
+		  	<if test="vo.id != null ">and id = #{ vo.id }</if>
+		  	<if test="vo.parentId != null ">and parent_id = #{ vo.parentId }</if>
+  	        <if test="vo.knowledgeType != null and '' != vo.knowledgeType ">and knowledge_type like CONCAT('%',#{ vo.knowledgeType },'%')</if>
+  	        <if test="vo.knowledgeTypeDesc != null and '' != vo.knowledgeTypeDesc ">and knowledge_type_desc = #{ vo.knowledgeTypeDesc }</if>
+		  	<if test="vo.knowledgeTypeState != null ">and knowledge_type_state = #{ vo.knowledgeTypeState }</if>
+		  	<if test="vo.createTime != null ">and create_time = #{ vo.createTime }</if>
+		  	<if test="vo.modifyTime != null ">and modify_time = #{ vo.modifyTime }</if>
+  	</select>      
+  
+	<!-- 根据主键获取对象 -->  
+	<select id="selectByPrimaryKey" resultMap="BaseResultVoMap" parameterType="java.lang.Integer" >
+	  select t.*,s.knowledge_type as parent_name from t_knowledge_type t left join t_knowledge_type s on t.parent_id = s.id
+	  where t.id = #{id,jdbcType=INTEGER}
+	</select>	
+
+	 <!-- 获取表所有数据 -->    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+      from t_knowledge_type
+    </select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	  delete from t_knowledge_type
+	  where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.knowledge.KnowledgeType" useGeneratedKeys="true" keyProperty="id">
+       insert into t_knowledge_type (
+		id,parent_id,knowledge_type,knowledge_type_desc,knowledge_type_state,create_time,modify_time)values ( 
+		#{id,jdbcType=INTEGER},#{parentId,jdbcType=INTEGER},#{knowledgeType,jdbcType=VARCHAR},#{knowledgeTypeDesc,jdbcType=VARCHAR},#{knowledgeTypeState,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.knowledge.KnowledgeType" useGeneratedKeys="true" keyProperty="id" >
+	   insert into t_knowledge_type
+ 		<trim prefix="(" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">id,</if>
+	  		<if test="parentId != null ">parent_id,</if>
+	  		<if test="knowledgeType != null ">knowledge_type,</if>
+	  		<if test="knowledgeTypeDesc != null ">knowledge_type_desc,</if>
+	  		<if test="knowledgeTypeState != null ">knowledge_type_state,</if>
+	  		<if test="createTime != null ">create_time,</if>
+	  		<if test="modifyTime != null ">modify_time,</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+	  		<if test="parentId != null ">#{parentId,jdbcType=INTEGER},</if>
+	  		<if test="knowledgeType != null ">#{knowledgeType,jdbcType=VARCHAR},</if>
+	  		<if test="knowledgeTypeDesc != null ">#{knowledgeTypeDesc,jdbcType=VARCHAR},</if>
+	  		<if test="knowledgeTypeState != null ">#{knowledgeTypeState,jdbcType=INTEGER},</if>
+	  		<if test="createTime != null ">#{createTime,jdbcType=TIMESTAMP},</if>
+	  		<if test="modifyTime != null ">#{modifyTime,jdbcType=TIMESTAMP},</if>
+ 		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.knowledge.KnowledgeType" >
+	   update t_knowledge_type
+		<set >
+			<if test="id != null ">
+		  	id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null ">
+		  	parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="knowledgeType != null ">
+		  	knowledge_type = #{knowledgeType,jdbcType=VARCHAR},
+			</if>
+			<if test="knowledgeTypeDesc != null ">
+		  	knowledge_type_desc = #{knowledgeTypeDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="knowledgeTypeState != null ">
+		  	knowledge_type_state = #{knowledgeTypeState,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null ">
+		  	create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null ">
+		  	modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+	    </set>
+	   where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	 <!-- 根据对象主键更新 -->    
+  	<update id="updateByPrimaryKey" parameterType="com.simulation.model.knowledge.KnowledgeType" >
+       update t_knowledge_type
+       set 
+	      id = #{id,jdbcType=INTEGER},
+	      parent_id = #{parentId,jdbcType=INTEGER},
+	      knowledge_type = #{knowledgeType,jdbcType=VARCHAR},
+	      knowledge_type_desc = #{knowledgeTypeDesc,jdbcType=VARCHAR},
+	      knowledge_type_state = #{knowledgeTypeState,jdbcType=INTEGER},
+	      create_time = #{createTime,jdbcType=TIMESTAMP},
+	      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+	   where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.simulation.model.knowledge.KnowledgeType" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_knowledge_type where 1=1
+			<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="parentId != null ">
+			AND  parent_id = #{parentId,jdbcType=INTEGER}
+			</if>
+			<if test="knowledgeType != null and '' != knowledgeType ">
+			AND  knowledge_type = #{knowledgeType,jdbcType=VARCHAR}
+			</if>
+			<if test="knowledgeTypeDesc != null and '' != knowledgeTypeDesc ">
+			AND  knowledge_type_desc = #{knowledgeTypeDesc,jdbcType=VARCHAR}
+			</if>
+			<if test="knowledgeTypeState != null ">
+			AND  knowledge_type_state = #{knowledgeTypeState,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null ">
+			AND  create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null ">
+			AND  modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteByIds" >
+	   delete from t_knowledge_type
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+	</delete>
+	
+	<!-- 根据上级资源id查找,用户构造树 -->
+	<select id="selectListByParentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_knowledge_type where 1=1 
+				<if test="parentId != null ">
+					AND  parent_id = #{parentId,jdbcType=INTEGER}
+				</if>
+				<if test="knowledgeTypeState != null ">
+					AND  knowledge_type_state = #{knowledgeTypeState,jdbcType=INTEGER}	
+				</if>	
+		order by id
+	</select>
+	
+	<!-- 用于添加时重复性校验 -->
+	<select id="selectObj" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_knowledge_type where 1=1
+			<if test="parentId != null ">
+				AND  parent_id = #{parentId,jdbcType=INTEGER}
+			</if>
+			<if test="knowledgeType != null and '' != knowledgeType">
+				AND  knowledge_type = #{knowledgeType,jdbcType=VARCHAR}
+			</if>
+			order by id
+	</select>
+	
+	<!--批量删除时校验-->
+	<select id="selectListByParentIds" resultMap="BaseResultMap">
+	   select <include refid="Base_Column_List"/>
+	   from t_knowledge_type 
+	   where parent_id in
+	      <foreach collection="parentIds" item="parentId" index="index"
+             open="(" close=")" separator=",">
+              #{parentId,jdbcType=INTEGER}
+          </foreach>
+          <if test="knowledgeTypeState != null ">
+			  AND  knowledge_type_state = #{knowledgeTypeState,jdbcType=INTEGER}	
+		</if>
+	</select>
+</mapper>   

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.NewsImageDao">
+    <select id="getNewsImageByImagePath" resultType="com.simulation.model.knowledge.NewsImage">
+        select * from t_news_image
+        where image_url = #{imagePath,jdbcType=VARCHAR}
+    </select>
+    <insert id="addNewsImage" >
+        insert into t_news_image (image_url,image_name)
+        values(
+        	#{image.imageUrl,jdbcType=VARCHAR},
+        	#{image.imageName,jdbcType=VARCHAR}
+        	
+        )
+    </insert>
+    <select id="findNewsImageById" resultType="com.simulation.model.knowledge.NewsImage">
+        select * from t_news_image
+        where id=#{id}
+    </select>
+    <delete id="deleteById">
+        delete from t_news_image
+        where id=#{id}
+    </delete>
+    <!-- 修改新闻主图 -->
+    <update id="editorNewsImage">
+        update t_news_image
+        <set>
+            <if test="newsImage.imageName!=null and newsImage.imageName!=''">
+                 image_name = #{newsImage.imageName},
+            </if>
+            <if test="newsImage.imageUrl!=null and newsImage.imageUrl!=''">
+                image_url = #{newsImage.imageUrl}
+            </if>
+        </set>
+        <where>
+            id=#{newsImage.id}
+        </where>
+    </update>
+</mapper>

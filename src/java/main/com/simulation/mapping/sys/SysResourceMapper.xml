@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.sys.SysResourceDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.sys.SysResource">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+		<result column="resource_path" property="resourcePath" jdbcType="VARCHAR" />
+		<result column="resource_icon" property="resourceIcon" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="resource_desc" property="resourceDesc" jdbcType="VARCHAR" />
+		<result column="permission_str" property="permissionStr" jdbcType="VARCHAR" />
+		<result column="order_num" property="orderNum" jdbcType="INTEGER" />
+		<result column="is_enable" property="isEnable" jdbcType="INTEGER" />
+		<result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+    <resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.sys.SysResourceVo">
+    	<result column="parent_name" property="parentName" jdbcType="VARCHAR" />
+    	<result column="role_id" property="roleId" jdbcType="INTEGER" />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,parent_id,resource_name,resource_path,resource_icon,level,resource_desc,permission_str,order_num,is_enable,create_user_id,create_time,modify_user_id,modify_time
+	</sql>
+
+	 <!-- 分页数据 -->    
+	<select id="findListByPage" resultMap="BaseResultVoMap" parameterType="com.simulation.vo.sys.SysResourceVo">
+  		select t.*,r.resource_name as parent_name from t_sys_resource t 
+  		INNER  JOIN t_sys_resource r on t.parent_id = r.id where 1=1
+		  	<if test="vo.id != null ">and t.id = #{ vo.id }</if>
+		  	<if test="vo.parentId != null ">and t.parent_id = #{ vo.parentId }</if>
+  	        <if test="vo.resourceName != null and '' != vo.resourceName ">and t.resource_name like CONCAT('%',#{ vo.resourceName },'%') </if>
+  	        <if test="vo.resourcePath != null and '' != vo.resourcePath ">and t.resource_path = #{ vo.resourcePath }</if>
+  	        <if test="vo.resourceIcon != null and '' != vo.resourceIcon ">and t.resource_icon = #{ vo.resourceIcon }</if>
+		  	<if test="vo.level != null ">and t.level = #{ vo.level }</if>
+  	        <if test="vo.resourceDesc != null and '' != vo.resourceDesc ">and t.resource_desc = #{ vo.resourceDesc }</if>
+  	        <if test="vo.permissionStr != null and '' != vo.permissionStr ">and t.permission_str = #{ vo.permissionStr }</if>
+		  	<if test="vo.orderNum != null ">and t.order_num = #{ vo.orderNum }</if>
+		  	<if test="vo.isEnable != null ">and t.is_enable = #{ vo.isEnable }</if>
+		  	<if test="vo.createUserId != null ">and t.create_user_id = #{ vo.createUserId }</if>
+		  	<if test="vo.createTime != null ">and t.create_time = #{ vo.createTime }</if>
+		  	<if test="vo.modifyUserId != null ">and t.modify_user_id = #{ vo.modifyUserId }</if>
+		  	<if test="vo.modifyTime != null ">and t.modify_time = #{ vo.modifyTime }</if>
+		order by level,order_num
+    </select>
+	<!-- 根据主键获取对象 -->  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_sys_resource
+	  where id = #{id,jdbcType=INTEGER}
+	</select>	
+
+	 <!-- 获取表所有数据 -->    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+      from t_sys_resource
+    </select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	  delete from t_sys_resource
+	  where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.sys.SysResource" useGeneratedKeys="true" keyProperty="id">
+       insert into t_sys_resource (
+		id,parent_id,resource_name,resource_path,resource_icon,level,resource_desc,permission_str,order_num,is_enable,create_user_id,create_time,modify_user_id,modify_time)values ( 
+		#{id,jdbcType=INTEGER},#{parentId,jdbcType=INTEGER},#{resourceName,jdbcType=VARCHAR},#{resourcePath,jdbcType=VARCHAR},#{resourceIcon,jdbcType=VARCHAR},#{level,jdbcType=INTEGER},#{resourceDesc,jdbcType=VARCHAR},#{permissionStr,jdbcType=VARCHAR},#{orderNum,jdbcType=INTEGER},#{isEnable,jdbcType=INTEGER},#{createUserId,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{modifyUserId,jdbcType=INTEGER},#{modifyTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.sys.SysResource" useGeneratedKeys="true" keyProperty="id" >
+	   insert into t_sys_resource
+ 		<trim prefix="(" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">id,</if>
+	  		<if test="parentId != null ">parent_id,</if>
+	  		<if test="resourceName != null ">resource_name,</if>
+	  		<if test="resourcePath != null ">resource_path,</if>
+	  		<if test="resourceIcon != null ">resource_icon,</if>
+	  		<if test="level != null ">level,</if>
+	  		<if test="resourceDesc != null ">resource_desc,</if>
+	  		<if test="permissionStr != null ">permission_str,</if>
+	  		<if test="orderNum != null ">order_num,</if>
+	  		<if test="isEnable != null ">is_enable,</if>
+	  		<if test="createUserId != null ">create_user_id,</if>
+	  		<if test="createTime != null ">create_time,</if>
+	  		<if test="modifyUserId != null ">modify_user_id,</if>
+	  		<if test="modifyTime != null ">modify_time,</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+	  		<if test="parentId != null ">#{parentId,jdbcType=INTEGER},</if>
+	  		<if test="resourceName != null ">#{resourceName,jdbcType=VARCHAR},</if>
+	  		<if test="resourcePath != null ">#{resourcePath,jdbcType=VARCHAR},</if>
+	  		<if test="resourceIcon != null ">#{resourceIcon,jdbcType=VARCHAR},</if>
+	  		<if test="level != null ">#{level,jdbcType=INTEGER},</if>
+	  		<if test="resourceDesc != null ">#{resourceDesc,jdbcType=VARCHAR},</if>
+	  		<if test="permissionStr != null ">#{permissionStr,jdbcType=VARCHAR},</if>
+	  		<if test="orderNum != null ">#{orderNum,jdbcType=INTEGER},</if>
+	  		<if test="isEnable != null ">#{isEnable,jdbcType=INTEGER},</if>
+	  		<if test="createUserId != null ">#{createUserId,jdbcType=INTEGER},</if>
+	  		<if test="createTime != null ">#{createTime,jdbcType=TIMESTAMP},</if>
+	  		<if test="modifyUserId != null ">#{modifyUserId,jdbcType=INTEGER},</if>
+	  		<if test="modifyTime != null ">#{modifyTime,jdbcType=TIMESTAMP},</if>
+ 		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.sys.SysResource" >
+	   update t_sys_resource
+		<set >
+			<if test="id != null ">
+		  	id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null ">
+		  	parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="resourceName != null ">
+		  	resource_name = #{resourceName,jdbcType=VARCHAR},
+			</if>
+			<if test="resourcePath != null ">
+		  	resource_path = #{resourcePath,jdbcType=VARCHAR},
+			</if>
+			<if test="resourceIcon != null ">
+		  	resource_icon = #{resourceIcon,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null ">
+		  	level = #{level,jdbcType=INTEGER},
+			</if>
+			<if test="resourceDesc != null ">
+		  	resource_desc = #{resourceDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="permissionStr != null ">
+		  	permission_str = #{permissionStr,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNum != null ">
+		  	order_num = #{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="isEnable != null ">
+		  	is_enable = #{isEnable,jdbcType=INTEGER},
+			</if>
+			<if test="createUserId != null ">
+		  	create_user_id = #{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null ">
+		  	create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserId != null ">
+		  	modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+			</if>
+			<if test="modifyTime != null ">
+		  	modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+	    </set>
+	   where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	 <!-- 根据对象主键更新 -->    
+  	<update id="updateByPrimaryKey" parameterType="com.simulation.model.sys.SysResource" >
+       update t_sys_resource
+       set 
+	      id = #{id,jdbcType=INTEGER},
+	      parent_id = #{parentId,jdbcType=INTEGER},
+	      resource_name = #{resourceName,jdbcType=VARCHAR},
+	      resource_path = #{resourcePath,jdbcType=VARCHAR},
+	      resource_icon = #{resourceIcon,jdbcType=VARCHAR},
+	      level = #{level,jdbcType=INTEGER},
+	      resource_desc = #{resourceDesc,jdbcType=VARCHAR},
+	      permission_str = #{permissionStr,jdbcType=VARCHAR},
+	      order_num = #{orderNum,jdbcType=INTEGER},
+	      is_enable = #{isEnable,jdbcType=INTEGER},
+	      create_user_id = #{createUserId,jdbcType=INTEGER},
+	      create_time = #{createTime,jdbcType=TIMESTAMP},
+	      modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+	      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+	   where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.simulation.model.sys.SysResource" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_sys_resource where 1=1
+			<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="parentId != null ">
+			AND  parent_id = #{parentId,jdbcType=INTEGER}
+			</if>
+			<if test="resourceName != null and '' != resourceName ">
+			AND  resource_name = #{resourceName,jdbcType=VARCHAR}
+			</if>
+			<if test="resourcePath != null and '' != resourcePath ">
+			AND  resource_path = #{resourcePath,jdbcType=VARCHAR}
+			</if>
+			<if test="resourceIcon != null and '' != resourceIcon ">
+			AND  resource_icon = #{resourceIcon,jdbcType=VARCHAR}
+			</if>
+			<if test="level != null ">
+			AND  level = #{level,jdbcType=INTEGER}
+			</if>
+			<if test="resourceDesc != null and '' != resourceDesc ">
+			AND  resource_desc = #{resourceDesc,jdbcType=VARCHAR}
+			</if>
+			<if test="permissionStr != null and '' != permissionStr ">
+			AND  permission_str = #{permissionStr,jdbcType=VARCHAR}
+			</if>
+			<if test="orderNum != null ">
+			AND  order_num = #{orderNum,jdbcType=INTEGER}
+			</if>
+			<if test="isEnable != null ">
+			AND  is_enable = #{isEnable,jdbcType=INTEGER}
+			</if>
+			<if test="createUserId != null ">
+			AND  create_user_id = #{createUserId,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null ">
+			AND  create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyUserId != null ">
+			AND  modify_user_id = #{modifyUserId,jdbcType=INTEGER}
+			</if>
+			<if test="modifyTime != null ">
+			AND  modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteByIds" >
+	   delete from t_sys_resource
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+	</delete>
+	
+	<!-- 根据上级资源id查找 -->
+	<select id="selectListByParentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_sys_resource where 1=1 AND  parent_id = #{parentId,jdbcType=INTEGER}
+		order by order_num
+	</select>
+	
+	<!-- 根据上级资源id查找资源总数 -->
+	<select id="selectCountByParentId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	    SELECT count(*) as total  FROM T_SYS_RESOURCE
+		WHERE parent_id = #{parentId,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 查询vo对象 -->
+	<select id="selectVoByPrimaryKey" resultMap="BaseResultVoMap" parameterType="java.lang.Integer" >
+	  SELECT t.*,r.resource_name as parent_name 
+	  from t_sys_resource t left  JOIN t_sys_resource r on t.parent_id = r.id 
+	  where t.id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 查询授权数据 -->
+    <select id="findAuthorizationAll" resultMap="BaseResultVoMap" parameterType="java.lang.Integer" >
+	    select DISTINCT t.*,r.role_id from t_sys_resource t 
+		LEFT JOIN ( SELECT m.id,m.role_id ,m.resource_id from t_sys_role_resource m where m.role_id = #{roleId,jdbcType=VARCHAR} ) as r
+		on t.id = r.resource_id
+		order by order_num
+	 </select>
+	 
+	 <!-- 根据用户id查找资源 -->
+	 <select id="findAllByUserId" resultMap="BaseResultVoMap" parameterType="java.lang.Integer">
+	 	SELECT DISTINCT resource.* FROM t_sys_resource resource
+		JOIN  t_sys_role_resource role ON role.resource_id=resource.id
+		JOIN t_sys_user_role u ON u.role_id=role.role_id
+		WHERE resource.is_enable=1 AND u.user_id=#{userId,jdbcType=INTEGER}
+		ORDER BY resource.level,resource.order_num
+	 </select>
+	 
+	 <!-- 查询所需要资源是否被引用 -->
+	 <select id="selectResourceReference" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		 SELECT SUM(total_num) total FROM
+	 		(SELECT COUNT(*) total_num FROM t_sys_resource r
+			 WHERE r.parent_id=#{resourceId,jdbcType=INTEGER}
+			 UNION ALL 
+			 SELECT COUNT(*) total_num2 FROM  t_sys_role_resource r2
+			 WHERE r2.resource_id=#{resourceId,jdbcType=INTEGER}
+			) t_union
+	 </select>
+	
+</mapper>   

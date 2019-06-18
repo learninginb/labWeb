@@ -1,0 +1,93 @@
+
+<!-- saved from url=(0043)https://graph.qq.com/jsdkproxy/PMProxy.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+     
+	 <title>TC QQ Connect Client Flow PMProxy</title>
+	 <style type="text/css">
+		html, body{font-size:14px; line-height:180%;}
+		textarea {width:620px; background:#eaeaea;}
+
+		#result b{color:red;}
+	 </style>
+
+   <script src="./qc(1).js"></script></head> 
+   <body> 
+   
+		<div>
+			<textarea style="height:60px; " readonly="1" id="dbg_console">
+			</textarea>
+		</div>
+
+    
+
+
+<!--<script type="text/javascript" src="https://graph.qq.com/jsdkproxy/qc.js"></script>-->
+
+<script type="text/javascript">
+	!function(){
+		var _ver = location.hash.replace(/^#*/g,"");
+				if(/^[_-]?(\d\.)+\d$/.test(_ver)){
+					_ver="-"+_ver;
+				}else{
+					_ver="";
+				}
+
+//		document.write('<script type="text/javascript" src="https://graph.qq.com/jsdkproxy/qc'+_ver+'.js"><'+'/script>');
+		//document.write will cause IE : SEC7111: HTTPS 安全受到 https://graph.qq.com/jsdkproxy/PMProxy.html 的威胁
+		var script = document.createElement("script");
+		script.src='https://graph.qq.com/jsdkproxy/qc'+_ver+'.js';
+		var head = document.getElementsByTagName("head");
+		if(head&&head[0]){
+			head[0].appendChild(script);
+		}
+	}();
+</script>
+<script type="text/javascript">
+
+	(function(){
+		function send(msg) {
+			if(!window.QC) {
+				var arg;
+				if( send.times > 10 ) {
+					//不再重试，认为丢包
+					send.times=0;
+					window.console && console.error("JSSDK超时丢包:" + msg.data);
+					return;
+				}
+				arg = {data:msg.data, origin:msg.origin};
+				setTimeout(function(){
+					send.times++;
+					send(arg);
+				},1000);
+				return;
+			}
+			QC.Console.log(msg.origin);
+			var dt = msg.data;
+			var args = QC.QueryString.parse(dt);
+			var req = new QC.XHRRequest(args.uri, QC.QueryString.parse(args.paras), args.fmt, args.method);
+			req.complete(function(respObj){
+				receive((respObj&&respObj.data)||{}, req);
+			}).send();
+		}
+		send.times = 0;
+
+		function receive(respData, req) {
+			var str = "" /*QC.QueryString.stringify(respData)*/, seq = req.seq, fmt=req.fmt, status = req.xhr.status;
+			switch(fmt) {
+				case "xml":
+//						debugger;
+						str = QC.XML.stringify(respData);
+					break;
+				case "json":
+						str = QC.JSON.stringify(respData);
+					break;
+			}
+			parent.postMessage([seq,status,fmt, str].join(":<.<<"+"#:"), "*");
+		}
+
+		window.addEventListener
+				? window.addEventListener("message", send, false)
+				: window.attachEvent("onmessage", send);
+	})();
+
+</script></body></html>

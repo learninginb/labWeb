@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.KnowledgeSummaryDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.knowledge.KnowledgeSummary">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="knowledge_id" property="knowledgeId" jdbcType="INTEGER" />
+		<result column="read_times" property="readTimes" jdbcType="INTEGER" />
+		<result column="collection_times" property="collectionTimes" jdbcType="INTEGER" />
+		<result column="follow_times" property="followTimes" jdbcType="INTEGER" />
+		<result column="comment_times" property="commentTimes" jdbcType="INTEGER" />
+	</resultMap>
+    <resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.knowledge.KnowledgeSummaryVo">
+
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,knowledge_id,read_times,collection_times,follow_times,comment_times
+	</sql>
+
+	 <!-- 分页数据 -->    
+	<select id="findListByPage" resultMap="BaseResultVoMap" parameterType="com.simulation.vo.knowledge.KnowledgeSummaryVo">
+  		select 
+  		<include refid="Base_Column_List" />
+  	      from t_knowledge_summary where 1=1 
+		  	<if test="vo.id != null ">and id = #{ vo.id }</if>
+		  	<if test="vo.knowledgeId != null ">and knowledge_id = #{ vo.knowledgeId }</if>
+		  	<if test="vo.readTimes != null ">and read_times = #{ vo.readTimes }</if>
+		  	<if test="vo.collectionTimes != null ">and collection_times = #{ vo.collectionTimes }</if>
+		  	<if test="vo.followTimes != null ">and follow_times = #{ vo.followTimes }</if>
+		  	<if test="vo.commentTimes != null ">and comment_times = #{ vo.commentTimes }</if>
+  	</select>      
+  
+	<!-- 根据主键获取对象 -->  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_knowledge_summary
+	  where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取表所有数据 -->    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+      from t_knowledge_summary
+    </select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	  delete from t_knowledge_summary
+	  where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.knowledge.KnowledgeSummary" useGeneratedKeys="true" keyProperty="id">
+       insert into t_knowledge_summary (
+		id,knowledge_id,read_times,collection_times,follow_times,comment_times)values ( 
+		#{id,jdbcType=INTEGER},#{knowledgeId,jdbcType=INTEGER},#{readTimes,jdbcType=INTEGER},#{collectionTimes,jdbcType=INTEGER},#{followTimes,jdbcType=INTEGER},#{commentTimes,jdbcType=INTEGER})
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.knowledge.KnowledgeSummary" useGeneratedKeys="true" keyProperty="id" >
+	   insert into t_knowledge_summary
+ 		<trim prefix="(" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">id,</if>
+	  		<if test="knowledgeId != null ">knowledge_id,</if>
+	  		<if test="readTimes != null ">read_times,</if>
+	  		<if test="collectionTimes != null ">collection_times,</if>
+	  		<if test="followTimes != null ">follow_times,</if>
+	  		<if test="commentTimes != null ">comment_times,</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+	  		<if test="knowledgeId != null ">#{knowledgeId,jdbcType=INTEGER},</if>
+	  		<if test="readTimes != null ">#{readTimes,jdbcType=INTEGER},</if>
+	  		<if test="collectionTimes != null ">#{collectionTimes,jdbcType=INTEGER},</if>
+	  		<if test="followTimes != null ">#{followTimes,jdbcType=INTEGER},</if>
+	  		<if test="commentTimes != null ">#{commentTimes,jdbcType=INTEGER},</if>
+ 		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.knowledge.KnowledgeSummary" >
+	   update t_knowledge_summary
+		<set >
+			<if test="id != null ">
+		  	id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="knowledgeId != null ">
+		  	knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+			</if>
+			<if test="readTimes != null ">
+		  	read_times = #{readTimes,jdbcType=INTEGER},
+			</if>
+			<if test="collectionTimes != null ">
+		  	collection_times = #{collectionTimes,jdbcType=INTEGER},
+			</if>
+			<if test="followTimes != null ">
+		  	follow_times = #{followTimes,jdbcType=INTEGER},
+			</if>
+			<if test="commentTimes != null ">
+		  	comment_times = #{commentTimes,jdbcType=INTEGER},
+			</if>
+	    </set>
+	   where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	 <!-- 根据对象主键更新 -->    
+  	<update id="updateByPrimaryKey" parameterType="com.simulation.model.knowledge.KnowledgeSummary" >
+       update t_knowledge_summary
+       set 
+	      id = #{id,jdbcType=INTEGER},
+	      knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+	      read_times = #{readTimes,jdbcType=INTEGER},
+	      collection_times = #{collectionTimes,jdbcType=INTEGER},
+	      follow_times = #{followTimes,jdbcType=INTEGER},
+	      comment_times = #{commentTimes,jdbcType=INTEGER}
+	   where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.simulation.model.knowledge.KnowledgeSummary" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_knowledge_summary where 1=1
+			<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="knowledgeId != null ">
+			AND  knowledge_id = #{knowledgeId,jdbcType=INTEGER}
+			</if>
+			<if test="readTimes != null ">
+			AND  read_times = #{readTimes,jdbcType=INTEGER}
+			</if>
+			<if test="collectionTimes != null ">
+			AND  collection_times = #{collectionTimes,jdbcType=INTEGER}
+			</if>
+			<if test="followTimes != null ">
+			AND  follow_times = #{followTimes,jdbcType=INTEGER}
+			</if>
+			<if test="commentTimes != null ">
+			AND  comment_times = #{commentTimes,jdbcType=INTEGER}
+			</if>
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteByIds" >
+	   delete from t_knowledge_summary
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+	</delete>
+	
+	<!-- 通过knowledgeid获取对象 -->  
+	<select id="findByKnowledgeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_knowledge_summary
+	  where knowledge_id = #{knowledgeId,jdbcType=INTEGER}
+	</select>
+</mapper>   

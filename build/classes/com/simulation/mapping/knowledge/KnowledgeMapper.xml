@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.KnowledgeDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.knowledge.Knowledge">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="knowledge_type" property="knowledgeType" jdbcType="VARCHAR" />
+		<result column="knowledge_title" property="knowledgeTitle" jdbcType="VARCHAR" />
+		<result column="knowledge_version" property="knowledgeVersion" jdbcType="NUMERIC" />
+		<result column="create_user" property="createUser" jdbcType="INTEGER" />
+		<result column="knowledge_comment" property="knowledgeComment" jdbcType="VARCHAR" />
+		<result column="knowledge_icon_url" property="knowledgeIconUrl" jdbcType="VARCHAR" />
+		<result column="knowledge_attach_url" property="knowledgeAttachUrl" jdbcType="VARCHAR" />
+		<result column="knowledge_state" property="knowledgeState" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+    <resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.knowledge.KnowledgeVo">
+			<result column="knowledge_type_name" property="knowledgeTypeName" jdbcType="VARCHAR" />
+			<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+			<result column="is_collection_valid" property="isCollectionValid" jdbcType="INTEGER" />
+			<result column="reading_times" property="readingTimes" jdbcType="INTEGER" />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,knowledge_type,knowledge_title,knowledge_version,create_user,knowledge_comment,knowledge_icon_url,knowledge_attach_url,knowledge_state,create_time,modify_time
+	</sql>
+
+	 <!-- 分页数据,查询所有不在回收站的数据-->    
+	<select id="findListByPage" resultMap="BaseResultVoMap" parameterType="com.simulation.vo.knowledge.KnowledgeVo">
+  		select t.*,s.knowledge_type as knowledge_type_name,o.user_name as create_user_name
+  	      from t_knowledge t left join t_knowledge_type s on t.knowledge_type = s.id left join t_sys_user o on t.create_user= o. id where 1=1 
+		  	<if test="vo.id != null ">and t.id = #{ vo.id }</if>
+  	        <if test="vo.knowledgeType != null and '' != vo.knowledgeType ">and t.knowledge_type = #{vo.knowledgeType} </if>
+  	        <if test="vo.knowledgeTitle != null and '' != vo.knowledgeTitle ">and t.knowledge_title like CONCAT('%',#{ vo.knowledgeTitle },'%')</if>
+  	        <if test="vo.knowledgeVersion != null ">and t.knowledge_version = #{ vo.knowledgeVersion }</if>
+		  	<if test="vo.createUser != null ">and t.create_user = #{ vo.createUser }</if>
+  	        <if test="vo.knowledgeComment != null and '' != vo.knowledgeComment ">and t.knowledge_comment = #{ vo.knowledgeComment }</if>
+  	        <if test="vo.knowledgeIconUrl != null and '' != vo.knowledgeIconUrl ">and t.knowledge_icon_url = #{ vo.knowledgeIconUrl }</if>
+  	        <if test="vo.knowledgeAttachUrl != null and '' != vo.knowledgeAttachUrl ">and t.knowledge_attach_url = #{ vo.knowledgeAttachUrl }</if>
+		  	<if test="vo.knowledgeState != null ">and t.knowledge_state = #{ vo.knowledgeState }</if>
+		  	<if test="vo.knowledgeState == null ">and t.knowledge_state != 7</if><!-- 默认查询不在回收站中的数据 -->
+		  	<if test="vo.createTime != null ">and t.create_time = #{ vo.createTime }</if>
+		  	<if test="vo.modifyTime != null ">and t.modify_time = #{ vo.modifyTime }</if>
+  	</select>      
+  
+	<!-- 根据主键获取对象 -->  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_knowledge
+	  where id = #{id,jdbcType=INTEGER}
+	</select>	
+
+	<!-- 根据主键获取vo对象 -->  
+	<select id="selectVoByPrimaryKey" resultMap="BaseResultVoMap" parameterType="java.lang.Integer" >
+	  select t.*,s.user_name as create_user_name
+	  from t_knowledge t left join t_sys_user s on t.create_user = s.id
+	  where t.id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!--知识阅读  -->
+	<select id="readByPrimaryKey" resultMap="BaseResultVoMap" parameterType="java.lang.Integer" >
+	  select t.*,s.user_name as create_user_name,o.is_valid as is_collection_valid,m.read_times as reading_times
+	  from t_knowledge t left join t_sys_user s on t.create_user = s.id
+	  					 left join t_knowledge_collection o on t.id = o.knowledge_id
+	  					 left join t_knowledge_summary m on t.id = m.knowledge_id
+	  where t.id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取表所有数据 -->    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+      from t_knowledge
+    </select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	  delete from t_knowledge
+	  where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.knowledge.Knowledge" useGeneratedKeys="true" keyProperty="id">
+       insert into t_knowledge (
+		id,knowledge_type,knowledge_title,knowledge_version,create_user,knowledge_comment,knowledge_icon_url,knowledge_attach_url,knowledge_state,create_time,modify_time)values ( 
+		#{id,jdbcType=INTEGER},#{knowledgeType,jdbcType=VARCHAR},#{knowledgeTitle,jdbcType=VARCHAR},#{knowledgeVersion,jdbcType=NUMERIC},#{createUser,jdbcType=INTEGER},#{knowledgeComment,jdbcType=VARCHAR},#{knowledgeIconUrl,jdbcType=VARCHAR},#{knowledgeAttachUrl,jdbcType=VARCHAR},#{knowledgeState,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.knowledge.Knowledge" useGeneratedKeys="true" keyProperty="id" >
+	   insert into t_knowledge
+ 		<trim prefix="(" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">id,</if>
+	  		<if test="knowledgeType != null ">knowledge_type,</if>
+	  		<if test="knowledgeTitle != null ">knowledge_title,</if>
+	  		<if test="knowledgeVersion != null ">knowledge_version,</if>
+	  		<if test="createUser != null ">create_user,</if>
+	  		<if test="knowledgeComment != null ">knowledge_comment,</if>
+	  		<if test="knowledgeIconUrl != null ">knowledge_icon_url,</if>
+	  		<if test="knowledgeAttachUrl != null ">knowledge_attach_url,</if>
+	  		<if test="knowledgeState != null ">knowledge_state,</if>
+	  		<if test="createTime != null ">create_time,</if>
+	  		<if test="modifyTime != null ">modify_time,</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+	  		<if test="knowledgeType != null ">#{knowledgeType,jdbcType=VARCHAR},</if>
+	  		<if test="knowledgeTitle != null ">#{knowledgeTitle,jdbcType=VARCHAR},</if>
+	  		<if test="knowledgeVersion != null ">#{knowledgeVersion,jdbcType=NUMERIC},</if>
+	  		<if test="createUser != null ">#{createUser,jdbcType=INTEGER},</if>
+	  		<if test="knowledgeComment != null ">#{knowledgeComment,jdbcType=VARCHAR},</if>
+	  		<if test="knowledgeIconUrl != null ">#{knowledgeIconUrl,jdbcType=VARCHAR},</if>
+	  		<if test="knowledgeAttachUrl != null ">#{knowledgeAttachUrl,jdbcType=VARCHAR},</if>
+	  		<if test="knowledgeState != null ">#{knowledgeState,jdbcType=INTEGER},</if>
+	  		<if test="createTime != null ">#{createTime,jdbcType=TIMESTAMP},</if>
+	  		<if test="modifyTime != null ">#{modifyTime,jdbcType=TIMESTAMP},</if>
+ 		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.knowledge.Knowledge" >
+	   update t_knowledge
+		<set >
+			<if test="id != null ">
+		  	id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="knowledgeType != null ">
+		  	knowledge_type = #{knowledgeType,jdbcType=VARCHAR},
+			</if>
+			<if test="knowledgeTitle != null ">
+		  	knowledge_title = #{knowledgeTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="knowledgeVersion != null ">
+		  	knowledge_version = #{knowledgeVersion,jdbcType=NUMERIC},
+			</if>
+			<if test="createUser != null ">
+		  	create_user = #{createUser,jdbcType=INTEGER},
+			</if>
+			<if test="knowledgeComment != null ">
+		  	knowledge_comment = #{knowledgeComment,jdbcType=VARCHAR},
+			</if>
+			<if test="knowledgeIconUrl != null ">
+		  	knowledge_icon_url = #{knowledgeIconUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="knowledgeAttachUrl != null ">
+		  	knowledge_attach_url = #{knowledgeAttachUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="knowledgeState != null ">
+		  	knowledge_state = #{knowledgeState,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null ">
+		  	create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null ">
+		  	modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+	    </set>
+	   where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	 <!-- 根据对象主键更新 -->    
+  	<update id="updateByPrimaryKey" parameterType="com.simulation.model.knowledge.Knowledge" >
+       update t_knowledge
+       set 
+	      id = #{id,jdbcType=INTEGER},
+	      knowledge_type = #{knowledgeType,jdbcType=VARCHAR},
+	      knowledge_title = #{knowledgeTitle,jdbcType=VARCHAR},
+	      knowledge_version = #{knowledgeVersion,jdbcType=NUMERIC},
+	      create_user = #{createUser,jdbcType=INTEGER},
+	      knowledge_comment = #{knowledgeComment,jdbcType=VARCHAR},
+	      knowledge_icon_url = #{knowledgeIconUrl,jdbcType=VARCHAR},
+	      knowledge_attach_url = #{knowledgeAttachUrl,jdbcType=VARCHAR},
+	      knowledge_state = #{knowledgeState,jdbcType=INTEGER},
+	      create_time = #{createTime,jdbcType=TIMESTAMP},
+	      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+	   where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.simulation.model.knowledge.Knowledge" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_knowledge where 1=1
+			<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="knowledgeType != null and '' != knowledgeType ">
+			AND  knowledge_type = #{knowledgeType,jdbcType=VARCHAR}
+			</if>
+			<if test="knowledgeTitle != null and '' != knowledgeTitle ">
+			AND  knowledge_title = #{knowledgeTitle,jdbcType=VARCHAR}
+			</if>
+			<if test="knowledgeVersion != null ">
+			AND  knowledge_version = #{knowledgeVersion,jdbcType=NUMERIC}
+			</if>
+			<if test="createUser != null ">
+			AND  create_user = #{createUser,jdbcType=INTEGER}
+			</if>
+			<if test="knowledgeComment != null and '' != knowledgeComment ">
+			AND  knowledge_comment = #{knowledgeComment,jdbcType=VARCHAR}
+			</if>
+			<if test="knowledgeIconUrl != null and '' != knowledgeIconUrl ">
+			AND  knowledge_icon_url = #{knowledgeIconUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="knowledgeAttachUrl != null and '' != knowledgeAttachUrl ">
+			AND  knowledge_attach_url = #{knowledgeAttachUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="knowledgeState != null ">
+			AND  knowledge_state = #{knowledgeState,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null ">
+			AND  create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null ">
+			AND  modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteByIds" >
+	   delete from t_knowledge
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+	</delete>
+	
+	<update id="updateStateByPrimaryKey" parameterType="java.lang.Integer" >
+	  update t_knowledge
+       set 
+	      knowledge_state = #{knowledgeState,jdbcType=INTEGER}
+	  where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+  	<update id="updateState" parameterType="com.simulation.model.knowledge.Knowledge" >
+       update t_knowledge
+       set 
+	      knowledge_state = #{knowledgeState,jdbcType=INTEGER}
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+  	</update>
+  	
+  	<!--根据knowledgetypes查找  -->
+  	<select id="selectListByKnowledgeTypes" resultMap="BaseResultMap">
+	   select <include refid="Base_Column_List"/>
+	   where knowledge_type in
+	      <foreach collection="knowledgeTypes" item="knowledgeType" index="index"
+             open="(" close=")" separator=",">
+              #{knowledgeType,jdbcType=INTEGER}
+          </foreach>
+	</select>
+</mapper>   

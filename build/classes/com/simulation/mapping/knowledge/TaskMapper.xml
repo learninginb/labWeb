@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.TaskDao">
+    <resultMap id="BaseResultMap" type="com.simulation.vo.knowledge.TaskVo" >
+        <id column="id" property="id" jdbcType="INTEGER"/>
+         <result column="pic_id" property="picId" jdbcType="INTEGER"/>
+         <result column="importance" property="importance" jdbcType="INTEGER"/>
+         <result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+         <result column="distributor_id" property="distributorId" jdbcType="INTEGER"/>
+         <result column="executor_id" property="executorId" jdbcType="INTEGER"/>
+         <result column="status_id" property="statusId" jdbcType="INTEGER"/>
+         <result column="theme" property="theme" jdbcType="VARCHAR"/>
+         <result column="type" property="type" jdbcType="VARCHAR"/>
+         <result column="file_url" property="fileUrl" jdbcType="VARCHAR"/>
+         <result column="description" property="description" jdbcType="VARCHAR"/>
+         <result column="begin_time" property="beginTime" jdbcType="DATE"/>
+         <result column="finish_time" property="finishTime" jdbcType="DATE"/>
+         <result column="distributor" property="distributor" jdbcType="VARCHAR"/>
+         <result column="pic" property="pic" jdbcType="VARCHAR"/> 
+         <result column="executor" property="executor" jdbcType="VARCHAR"/>
+         <result column="status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+		pc.id,pc.parent_id,theme,type,pc.description,distributor_id,u2.user_name distributor,pic_id,u3.user_name pic,executor_id,u1.user_name executor,begin_time,finish_time,status_id,s.description `status`,file_url,importance
+	</sql>
+	
+    <!-- 插入计划性任务表 -->
+    <insert id="addTaskIntoPlan" parameterType="com.simulation.model.knowledge.Task">
+        insert into t_task_plantask (parent_id,type,theme,description,pic_id,distributor_id,executor_id,begin_time,finish_time,status_id,file_url,available,importance)
+        values(
+        <if test="task.parentId!=null">
+            #{task.parentId,jdbcType=INTEGER},
+        </if>
+        <if test="task.type!=null and task.type!=''">
+            #{task.type,jdbcType=VARCHAR},
+        </if>
+        <if test="task.theme!=null and task.theme!=''">
+            #{task.theme,jdbcType=VARCHAR},
+        </if>
+        <if test="task.description!=null and task.description!=''">
+            #{task.description,jdbcType=VARCHAR},
+        </if>
+        <if test="task.picId!=null">
+             #{task.picId,jdbcType=INTEGER},
+        </if>
+        <if test="task.distributorId!=null">
+             #{task.distributorId,jdbcType=INTEGER},
+        </if>
+        <if test="task.executorId!=null">
+             #{task.executorId,jdbcType=INTEGER},
+        </if>
+        <if test="task.beginTime!=null">
+            #{task.beginTime,jdbcType=DATE},
+        </if>
+        <if test="task.finishTime!=null">
+            #{task.finishTime,jdbcType=DATE},
+        </if>
+        <if test="task.statusId!=null">
+             #{task.statusId,jdbcType=INTEGER},
+        </if>
+        <if test="task.fileUrl!=null">
+            #{task.fileUrl,jdbcType=VARCHAR},
+        </if>
+        <if test="task.available!=null">
+            #{task.available,jdbcType=TINYINT}
+        </if>
+        <if test="task.importance!=null">
+             #{task.importance,jdbcType=INTEGER}
+        </if>
+        )
+    </insert>
+    
+    
+    <!-- 新建子任务 -->
+    <insert id="addSonTask" parameterType="com.simulation.model.knowledge.Task">
+        insert into t_task_plantask (parent_id,type,theme,description,pic_id,distributor_id,executor_id,begin_time,finish_time,status_id,file_url,available,importance)
+        values(
+        <if test="task.parentId!=null">
+            #{task.parentId,jdbcType=INTEGER},
+        </if>
+        <if test="task.type!=null and task.type!=''">
+            #{task.type,jdbcType=VARCHAR},
+        </if>
+        <if test="task.theme!=null and task.theme!=''">
+            #{task.theme,jdbcType=VARCHAR},
+        </if>
+        <if test="task.description!=null and task.description!=''">
+            #{task.description,jdbcType=VARCHAR},
+        </if>
+        <if test="task.picId!=null">
+             #{task.picId,jdbcType=INTEGER},
+        </if>
+        <if test="task.distributorId!=null">
+             #{task.distributorId,jdbcType=INTEGER},
+        </if>
+        <if test="task.executorId!=null">
+             #{task.executorId,jdbcType=INTEGER},
+        </if>
+        <if test="task.beginTime!=null">
+            #{task.beginTime,jdbcType=DATE},
+        </if>
+        <if test="task.finishTime!=null">
+            #{task.finishTime,jdbcType=DATE},
+        </if>
+        <if test="task.statusId!=null">
+             #{task.statusId,jdbcType=INTEGER},
+        </if>
+        <if test="task.fileUrl!=null">
+            #{task.fileUrl,jdbcType=VARCHAR},
+        </if>
+        <if test="task.available!=null">
+            #{task.available,jdbcType=TINYINT}
+        </if>
+        <if test="task.importance!=null">
+             #{task.importance,jdbcType=INTEGER}
+        </if>
+        )
+    </insert>
+
+    <!-- 通过id查计划性任务 -->
+    <select id="findPlanTaskById" resultMap="BaseResultMap">
+        SELECT
+        pc.id,pc.parent_id,theme,type,pc.description,distributor_id,u2.user_name distributor,pic_id,u3.user_name pic,executor_id,u1.user_name executor,begin_time,finish_time,status_id,s.description `status`,file_url,importance
+        from t_task_plantask pc, t_task_status s,t_sys_user u1,t_sys_user u2,t_sys_user u3
+        where pc.id = #{id} and s.id = pc.status_id and pc.executor_id = u1.id and pc.distributor_id = u2.id and pc.pic_id = u3.id
+    </select>
+    <!-- 查询所有我负责的任务 -->
+    <select id="findManagerListByPage" resultMap="BaseResultMap">
+ 		SELECT 
+		<include refid="Base_Column_List" />
+		from t_task_plantask pc
+			LEFT JOIN t_task_status s on s.id = pc.status_id
+			LEFT JOIN t_sys_user u1 ON pc.executor_id = u1.id
+			LEFT JOIN t_sys_user u2 ON pc.distributor_id = u2.id
+			LEFT JOIN t_sys_user u3 ON pc.pic_id = u3.id
+		where pc.distributor_id =#{task.distributorId} or pc.pic_id = #{task.picId} and available=true
+		<if test="task.theme!=null and task.theme!=''">
+		    and theme like '%${task.theme}%'
+		</if>
+    </select>
+    <!-- 查询我已完成的任务 -->
+    <select id="findFinishListByPage" resultMap="BaseResultMap">
+        SELECT 
+		<include refid="Base_Column_List" />
+		from t_task_plantask pc
+			LEFT JOIN t_task_status s on s.id = pc.status_id
+			LEFT JOIN t_sys_user u1 ON pc.executor_id = u1.id
+			LEFT JOIN t_sys_user u2 ON pc.distributor_id = u2.id
+			LEFT JOIN t_sys_user u3 ON pc.pic_id = u3.id
+		where pc.executor_id = #{task.executorId} and (s.id = 6 or s.id = 7) and available=true
+		<if test="task.theme!=null and task.theme!=''">
+		    and theme like '%${task.theme}%'
+		</if>
+    </select>
+    
+    <!-- 查询我未完成的任务 -->
+    <select id="findUnfinishListByPage" resultMap="BaseResultMap">
+        SELECT 
+		<include refid="Base_Column_List" />
+        from t_task_plantask pc
+        	LEFT JOIN t_task_status s on s.id = pc.status_id 
+			LEFT JOIN t_sys_user u1 ON pc.executor_id = u1.id
+			LEFT JOIN t_sys_user u2 ON pc.distributor_id = u2.id
+			LEFT JOIN t_sys_user u3 ON pc.pic_id = u3.id
+		where pc.executor_id = #{task.executorId} and (s.id = 3 or s.id = 4 or s.id = 5) and available=true
+		<if test="task.theme!=null and task.theme!=''">
+		    and theme like '%${task.theme}%'
+		</if>
+		
+    </select>
+    
+    <!-- 查询待我审核的任务 -->
+    <select id="findReviewListByPage" resultMap="BaseResultMap">
+        SELECT 
+		<include refid="Base_Column_List" />
+        from t_task_plantask pc
+        	LEFT JOIN t_task_status s on s.id = pc.status_id 
+			LEFT JOIN t_sys_user u1 ON pc.executor_id = u1.id
+			LEFT JOIN t_sys_user u2 ON pc.distributor_id = u2.id
+			LEFT JOIN t_sys_user u3 ON pc.pic_id = u3.id
+		where pc.distributor_id = #{task.distributorId} and s.id = 4 and available=true
+		<if test="task.theme!=null and task.theme!=''">
+		    and theme like '%${task.theme}%'
+		</if>
+    </select>
+    
+    <!-- 查找待接收的任务 -->
+    <select id="findReceiveListByPage" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+        from t_task_plantask pc
+        	LEFT JOIN t_task_status s on s.id = pc.status_id 
+			LEFT JOIN t_sys_user u1 ON pc.executor_id = u1.id
+			LEFT JOIN t_sys_user u2 ON pc.distributor_id = u2.id
+			LEFT JOIN t_sys_user u3 ON pc.pic_id = u3.id
+		where pc.executor_id = #{task.executorId} and pc.finish_time &gt;= curdate() and s.id = 1 and available=true
+		<if test="task.theme!=null and task.theme!=''">
+		    and theme like '%${task.theme}%'
+		</if>      
+    </select>
+    
+    <!-- 查询任务记录 -->
+    <select id="findRecordListByPage" resultMap="BaseResultMap">
+        SELECT 
+		<include refid="Base_Column_List" />
+        from t_task_plantask pc
+        	LEFT JOIN t_task_status s on s.id = pc.status_id 
+			LEFT JOIN t_sys_user u1 ON pc.executor_id = u1.id
+			LEFT JOIN t_sys_user u2 ON pc.distributor_id = u2.id
+			LEFT JOIN t_sys_user u3 ON pc.pic_id = u3.id
+		where (pc.executor_id = #{task.executorId} or pc.distributor_id = #{task.distributorId})  and ((pc.finish_time &lt; curdate() and pc.status_id &lt;&gt; 4) or pc.status_id=2 )
+		<if test="task.theme!=null and task.theme!=''">
+		    and theme like '%${task.theme}%'
+		</if>
+    </select>
+    
+    <select id="findSonTask" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT 
+		pc.id,pc.parent_id,theme,type,pc.description,distributor_id,u2.user_name distributor,pic_id,u3.user_name pic,executor_id,u1.user_name executor,begin_time,finish_time,status_id,s.description `status`,file_url,importance
+        from t_task_plantask pc
+        	LEFT JOIN t_task_status s on s.id = pc.status_id 
+			LEFT JOIN t_sys_user u1 ON pc.executor_id = u1.id
+			LEFT JOIN t_sys_user u2 ON pc.distributor_id = u2.id
+			LEFT JOIN t_sys_user u3 ON pc.pic_id = u3.id
+		where  pc.type='计划性任务' and available=true
+		<if test="id!=0">
+		    and pc.parent_id=#{id};
+		</if>
+    </select>
+
+    <select id="findCycleTask" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_task_plantask pc
+        LEFT JOIN t_task_status s on s.id = pc.status_id
+        LEFT JOIN t_sys_user u1 ON pc.executor_id = u1.id
+        LEFT JOIN t_sys_user u2 ON pc.distributor_id = u2.id
+        LEFT JOIN t_sys_user u3 ON pc.pic_id = u3.id
+        where pc.type=#{task.type} and available=true
+    </select>
+
+    <!-- 更改任务状态 -->
+    <update id="changeStatusById">
+        update t_task_plantask
+        set status_id = #{statusId}
+        where id = #{vo.id}
+    </update>
+    
+    <!-- 修改任务 -->
+    <update id="editTask" parameterType="com.simulation.vo.knowledge.TaskVo">
+        update t_task_plantask 
+         set
+          <if test="vo.beginTime!=null">
+            begin_time = #{vo.beginTime},
+        </if>
+        <if test="vo.finishTime!=null">
+            finish_time = #{vo.finishTime},
+        </if>
+        <if test="vo.importance!=null and vo.importance!=0">
+           importance = #{vo.importance},
+        </if>
+        <if test="vo.fileUrl!=null and vo.fileUrl!=''">
+            file_url = #{vo.fileUrl},
+        </if>
+        <if test="vo.description!=null and vo.description!=''">
+            description = #{vo.description},
+        </if>
+        <if test="vo.available!=null">
+            available = #{vo.available}
+        </if>
+        where id = #{vo.id} 
+    </update>
+    
+    <!-- 删除任务 -->
+    <delete id="deleteTask" parameterType="com.simulation.vo.knowledge.TaskVo">
+        delete from t_task_plantask 
+        where id = #{vo.id} and status_id &lt;&gt; 4 and status_id &lt;&gt; 6 and status_id &lt;&gt; 7;
+    </delete>
+</mapper>

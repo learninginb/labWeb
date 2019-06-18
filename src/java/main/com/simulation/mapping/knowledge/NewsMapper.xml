@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.NewsDao">
+    <resultMap id="BaseResultMap" type="com.simulation.vo.knowledge.NewsVo" >
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="author_id" property="authorId" jdbcType="INTEGER"/>
+        <result column="author" property="author" jdbcType="VARCHAR"/> 
+        <result column="content" property="content" jdbcType="INTEGER"/>
+        <result column="status_id" property="statusId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/> 
+        <result column="key_words" property="keyWords" jdbcType="VARCHAR"/>
+        <result column="location" property="location" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="news_name" property="newsName" jdbcType="VARCHAR"/>
+        <result column="importance" property="importance" jdbcType="INTEGER"/>
+        <result column="image_id" property="imageId" jdbcType="INTEGER"/>
+        <result column="image_name" property="imageName" jdbcType="VARCHAR"/>
+        <result column="image_url" property="imageUrl" jdbcType="VARCHAR"/>
+		<result column="readcount" property="readcount" jdbcType="INTEGER"/>
+    </resultMap>
+	
+    <sql id="Base_Column_List">
+        n.id,author_id,u.user_name author,status_id,status,n.key_words,n.location,n.create_time,news_name,n.importance,image_id,image_name,image_url,readcount
+    </sql>
+    <sql id="Base_Column_List1">
+        n.id,author_id,u.user_name author,status_id,status,n.key_words,n.location,n.create_time,news_name,n.content,n.importance,image_id,image_name,image_url,readcount
+    </sql>
+    <insert id="insertNews">
+	    insert into t_news(
+	    	author_id,content,status_id,key_words,location,create_time,news_name,importance,image_id
+	    )
+	    values(
+	    	   #{vo.authorId,jdbcType=INTEGER},
+	    	   #{vo.content,jdbcType=VARCHAR},
+	    	   #{vo.statusId,jdbcType=INTEGER},
+	    	   #{vo.keyWords,jdbcType=VARCHAR},  
+	    	   #{vo.location,jdbcType=VARCHAR},  
+	    	   #{vo.createTime,jdbcType=TIMESTAMP},  
+	    	   #{vo.newsName,jdbcType=VARCHAR},
+	    	   #{vo.importance,jdbcType=INTEGER},
+	    	   #{vo.imageId,jdbcType=INTEGER}
+	    )
+	</insert>
+	<!-- 根据id删除新闻 -->
+	<delete id="deleteById">
+	    delete from t_news
+	    where id=#{id}
+	</delete>
+    
+	<select id="findListByPage" resultMap="BaseResultMap">
+	    select 
+	    <include refid="Base_Column_List" />
+	    from t_news n,t_sys_user u,t_news_image i
+	    <where>
+	       	author_id = u.id and i.id = n.image_id and status_id &lt;&gt; 0
+	        <if test="vo.authorId!=null and vo.authorId!=0">
+	            and author_id = #{vo.authorId} 
+	        </if>
+	        <if test="vo.statusId!=null">
+				and status_id=#{vo.statusId}
+			</if>
+			<if test="vo.location!=null and vo.location!=''">
+				and n.location =#{vo.location}
+			</if>
+	        <if test="vo.newsName!=null and vo.newsName!=''">
+	            and news_name like '%${vo.newsName}%'
+	        </if>
+	    </where>
+	    order by n.create_time desc
+	</select>
+	
+	<select id="getNewsById" resultMap="BaseResultMap">
+	    select 
+	    <include refid="Base_Column_List1"></include>
+	    from t_news n,t_sys_user u,t_news_image i
+	    where n.id = #{id}  and author_id = u.id and i.id=n.image_id
+	    limit 1;
+	</select>
+	
+	<!-- 修改新闻 -->
+	<update id="editorNews">
+	    update t_news
+	    <set>
+	        <if test="newsVo.newsName!=null and newsVo.newsName!=''">
+	            news_name = #{newsVo.newsName},
+	        </if>
+	        <if test="newsVo.importance!=null">
+	            importance = #{newsVo.importance},
+	        </if>
+	        <if test="newsVo.keyWords!=null and newsVo.keyWords!=''">
+	            key_words = #{newsVo.keyWords},
+	        </if>
+	        <if test="newsVo.content!=null and newsVo.content!=''">
+	            content = #{newsVo.content},
+	        </if>
+	        <if test="newsVo.statusId!=null">
+	            status_id = #{newsVo.statusId},
+	        </if>
+	        <if test="newsVo.createTime!=null">
+	            create_time = #{newsVo.createTime},
+	        </if>
+	        <if test="newsVo.imageId!=null">
+	            image_id = #{newsVo.imageId},
+	        </if>
+	        <if test="newsVo.authorId!=null">
+	            author_id =#{newsVo.authorId},
+	        </if>
+	        <if test="newsVo.location!=null and newsVo!=''">
+	            location = #{newsVo.location}
+	        </if>
+	    </set>
+	    <where>
+	        id=#{newsVo.id}
+	    </where>
+	</update>
+	<select id="findAllList" parameterType="com.simulation.model.knowledge.Paper" resultMap="BaseResultMap">
+	    select 
+	    <include refid="Base_Column_List1" />
+	    from t_news n
+	    left join t_sys_user u on author_id = u.id
+	    left join t_news_image i on n.image_id = i.id
+	    <where>
+	        status_id=3
+	    </where> 
+	    limit #{page.firstResult},#{page.pageSize}
+	</select>
+	<select id="findAllListCount" resultType="Integer">
+	    select count(id) from t_news n
+	    where status_id=3
+	</select>
+	<select id="findPageByCreateTime" resultMap="BaseResultMap">
+	    select 
+	    <include refid="Base_Column_List1" />
+	    from t_news n
+	     left join t_sys_user u on author_id = u.id
+	    left join t_news_image i on n.image_id = i.id
+	    <where>
+	        date(create_time) = date(#{createTime}) 
+	    </where>
+	    limit 0,2
+	</select>
+	<update id="addReadcount" >
+		update t_news
+		<set>
+			readcount = readcount + 1
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="changeStatusId">
+		update t_news
+		<set>
+			status_id = #{statusId}
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

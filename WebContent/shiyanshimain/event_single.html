@@ -1,0 +1,669 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Event_single</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="Learn Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+	<script type="application/x-javascript">
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<link href="css/bootstrap-3.1.1.min.css" rel='stylesheet' type='text/css' />
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<!-- Custom Theme files -->
+	<link href="css/style.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="css/jquery.countdown.css" />
+	<link href='http://fonts.useso.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
+	<!----font-Awesome----->
+	<link href="css/font-awesome.css" rel="stylesheet">
+	<!----font-Awesome----->
+	<script>
+		$(document).ready(function () {
+			$(".dropdown").hover(
+				function () {
+					$('.dropdown-menu', this).stop(true, true).slideDown("fast");
+					$(this).toggleClass('open');
+				},
+				function () {
+					$('.dropdown-menu', this).stop(true, true).slideUp("fast");
+					$(this).toggleClass('open');
+				}
+			);
+		});
+	</script>
+	<!----Calender -------->
+	<link rel="stylesheet" href="css/clndr.css" type="text/css" />
+	<script src="js/underscore-min.js" type="text/javascript"></script>
+	<script src="js/moment-2.2.1.js" type="text/javascript"></script>
+	<script src="js/clndr.js" type="text/javascript"></script>
+	<script src="js/site.js" type="text/javascript"></script>
+	<!----End Calender -------->
+</head>
+
+<body>
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+					data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="index.html">实验室管理网站</a>
+			</div>
+			<!--/.navbar-header-->
+			<div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" style="height: 1px;">
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="/shiyanshi/login.do"><i class="fa fa-user"></i><span>登录</span></a>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+								class="fa fa-list"></i><span>公告</span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/shiyanshi/shiyanshimain/courses.html">公告1</a></li>
+							<li><a href="/shiyanshi/shiyanshimain/courses.html">公告2</a></li>
+							<li><a href="/shiyanshi/shiyanshimain/course_detail.html">公告3</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+								class="fa fa-calendar"></i><span>新闻</span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/shiyanshi/shiyanshimain/events.html">新闻1</a></li>
+							<li><a href="/shiyanshi/shiyanshimain/events.html">新闻2</a></li>
+							<li><a href="/shiyanshi/shiyanshimain/events.html">新闻3</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+								class="fa fa-globe"></i><span>语言</span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#"><span><i class="flags us"></i><span>英语</span></span></a></li>
+							<li><a href="#"><span><i class="flags newzland"></i><span>中文</span></span></a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+								class="fa fa-search"></i><span>搜索</span></a>
+						<ul class="dropdown-menu search-form">
+							<form>
+								<input type="text" class="search-text" name="s" placeholder="Search...">
+								<button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+							</form>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+		<!--/.navbar-collapse-->
+	</nav>
+	<nav class="navbar nav_bottom" role="navigation">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header nav_2">
+				<button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse"
+					data-target="#bs-megadropdown-tabs">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"></a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+				<ul class="nav navbar-nav nav_1">
+					<li><a href="/shiyanshi/shiyanshimain/index.html">首页</a></li>
+					<li><a href="/shiyanshi/shiyanshimain/about.html">关于</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">实验室<span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="/shiyanshi/shiyanshimain/terms.html">实验室1</a></li>
+							<li><a href="/shiyanshi/shiyanshimain/shortcodes.html">实验室2</a></li>
+							<li><a href="/shiyanshi/shiyanshimain/faq.html">实验室2</a></li>
+						</ul>
+					</li>
+					<li><a href="faculty.html">学院</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">项目<span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="/shiyanshi/shiyanshimain/terms.html">项目1</a></li>
+							<li><a href="/shiyanshi/shiyanshimain/shortcodes.html">项目2</a></li>
+							<li><a href="/shiyanshi/shiyanshimain/faq.html">项目3</a></li>
+						</ul>
+					</li>
+					<li><a href="/shiyanshi/shiyanshimain/services.html">服务</a></li>
+					<li><a href="/shiyanshi/shiyanshimain/features.html">特征</a></li>
+					<li><a href="/shiyanshi/shiyanshimain/blog.html">博客</a></li>
+
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	<!-- banner -->
+	<div class="courses_banner">
+		<div class="container">
+			<h3>新闻详情</h3>
+			<p class="description">
+				查看新闻的具体详情法律上JFK了我欸日平沃尔JFK善良的骂那些女的留情哦欸我
+			</p>
+			<div class="breadcrumb1">
+				<ul>
+					<li class="icon6"><a href="index.html">首页</a></li>
+					<li class="current-page"><a href="events.html">新闻</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- //banner -->
+	<div class="courses_box1">
+		<div class="container">
+			<div class="col-md-4">
+				<div class="cal1 cal_2">
+					<div class="clndr">
+						<div class="clndr-controls">
+							<div class="clndr-control-button">
+								<p class="clndr-previous-button">previous</p>
+							</div>
+							<div class="month">September 2015</div>
+							<div class="clndr-control-button rightalign">
+								<p class="clndr-next-button">next</p>
+							</div>
+						</div>
+						<table class="clndr-table" border="0" cellspacing="0" cellpadding="0">
+							<thead>
+								<tr class="header-days">
+									<td class="header-day">S</td>
+									<td class="header-day">M</td>
+									<td class="header-day">T</td>
+									<td class="header-day">W</td>
+									<td class="header-day">T</td>
+									<td class="header-day">F</td>
+									<td class="header-day">S</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="day past adjacent-month last-month calendar-day-2015-08-30">
+										<div class="day-contents">30</div>
+									</td>
+									<td class="day past adjacent-month last-month calendar-day-2015-08-31">
+										<div class="day-contents">31</div>
+									</td>
+									<td class="day today calendar-day-2015-09-01">
+										<div class="day-contents">1</div>
+									</td>
+									<td class="day calendar-day-2015-09-02">
+										<div class="day-contents">2</div>
+									</td>
+									<td class="day calendar-day-2015-09-03">
+										<div class="day-contents">3</div>
+									</td>
+									<td class="day calendar-day-2015-09-04">
+										<div class="day-contents">4</div>
+									</td>
+									<td class="day calendar-day-2015-09-05">
+										<div class="day-contents">5</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="day calendar-day-2015-09-06">
+										<div class="day-contents">6</div>
+									</td>
+									<td class="day calendar-day-2015-09-07">
+										<div class="day-contents">7</div>
+									</td>
+									<td class="day calendar-day-2015-09-08">
+										<div class="day-contents">8</div>
+									</td>
+									<td class="day calendar-day-2015-09-09">
+										<div class="day-contents">9</div>
+									</td>
+									<td class="day event calendar-day-2015-09-10">
+										<div class="day-contents">10</div>
+									</td>
+									<td class="day event calendar-day-2015-09-11">
+										<div class="day-contents">11</div>
+									</td>
+									<td class="day event calendar-day-2015-09-12">
+										<div class="day-contents">12</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="day event calendar-day-2015-09-13">
+										<div class="day-contents">13</div>
+									</td>
+									<td class="day event calendar-day-2015-09-14">
+										<div class="day-contents">14</div>
+									</td>
+									<td class="day calendar-day-2015-09-15">
+										<div class="day-contents">15</div>
+									</td>
+									<td class="day calendar-day-2015-09-16">
+										<div class="day-contents">16</div>
+									</td>
+									<td class="day calendar-day-2015-09-17">
+										<div class="day-contents">17</div>
+									</td>
+									<td class="day calendar-day-2015-09-18">
+										<div class="day-contents">18</div>
+									</td>
+									<td class="day calendar-day-2015-09-19">
+										<div class="day-contents">19</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="day calendar-day-2015-09-20">
+										<div class="day-contents">20</div>
+									</td>
+									<td class="day event calendar-day-2015-09-21">
+										<div class="day-contents">21</div>
+									</td>
+									<td class="day event calendar-day-2015-09-22">
+										<div class="day-contents">22</div>
+									</td>
+									<td class="day event calendar-day-2015-09-23">
+										<div class="day-contents">23</div>
+									</td>
+									<td class="day calendar-day-2015-09-24">
+										<div class="day-contents">24</div>
+									</td>
+									<td class="day calendar-day-2015-09-25">
+										<div class="day-contents">25</div>
+									</td>
+									<td class="day calendar-day-2015-09-26">
+										<div class="day-contents">26</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="day calendar-day-2015-09-27">
+										<div class="day-contents">27</div>
+									</td>
+									<td class="day calendar-day-2015-09-28">
+										<div class="day-contents">28</div>
+									</td>
+									<td class="day calendar-day-2015-09-29">
+										<div class="day-contents">29</div>
+									</td>
+									<td class="day calendar-day-2015-09-30">
+										<div class="day-contents">30</div>
+									</td>
+									<td class="day adjacent-month next-month calendar-day-2015-10-01">
+										<div class="day-contents">1</div>
+									</td>
+									<td class="day adjacent-month next-month calendar-day-2015-10-02">
+										<div class="day-contents">2</div>
+									</td>
+									<td class="day adjacent-month next-month calendar-day-2015-10-03">
+										<div class="day-contents">3</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="courses_box1-left">
+					<form>
+						<div class="select-block1">
+							<select>
+								<option value="">类型</option>
+								<option value="">类型1</option>
+								<option value="">类型2</option>
+								<option value="">类型3</option>
+								<option value="">类型4</option>
+							</select>
+						</div>
+						<!-- select-block -->
+						<div class="select-block1">
+							<select>
+								<option value="">日期</option>
+								<option value="">日期1</option>
+								<option value="">日期2</option>
+								<option value="">日期3</option>
+								<option value="">日期4</option>
+							</select>
+						</div>
+						<!-- select-block -->
+						<div class="select-block1">
+							<select>
+								<option value="">重要程度</option>
+								<option value="">重要程度1</option>
+								<option value="">重要程度2</option>
+								<option value="">重要程度3</option>
+								<option value="">重要程度4</option>
+							</select>
+						</div>
+						<!-- select-block -->
+						<div class="select-block1">
+							<select>
+								<option value="">实验室</option>
+								<option value="">实验室1</option>
+								<option value="">实验室2</option>
+								<option value="">实验室3</option>
+								<option value="">实验室4</option>
+							</select>
+						</div>
+						<!-- select-block -->
+						<input type="submit" value="搜索" class="course-submit">
+					</form>
+				</div>
+				<div class="social-widget">
+					<h2>联系我们</h2>
+					<ul class="courses_social">
+						<li class="facebook-icon">
+							<div>
+								<a href="#" class="fa fa-facebook"></a>
+								<p>2154</p>
+							</div>
+						</li>
+						<li class="twitter-icon">
+							<div>
+								<a href="#" class="fa fa-twitter"></a>
+								<p>1425</p>
+							</div>
+						</li>
+						<li class="gplus-icon">
+							<div>
+								<a href="#" class="fa fa-google-plus"></a>
+								<p>2150</p>
+							</div>
+						</li>
+						<div class="clearfix"> </div>
+					</ul>
+				</div>
+				
+				<ul class="posts">
+					<h3>最近焦点</h3>
+					<li>
+						<article class="entry-item">
+							<div class="entry-thumb pull-left">
+								<img src="images/t7.jpg" class="img-responsive" alt="" />
+							</div>
+							<div class="entry-content">
+								<h6><a href="#">焦点1</a></h6>
+								<p><a href="#">Admin</a> &nbsp;/&nbsp; 2015-10-03</p>
+							</div>
+							<div class="clearfix"> </div>
+						</article>
+					</li>
+					<li>
+						<article class="entry-item">
+							<div class="entry-thumb pull-left">
+								<img src="images/t17.jpg" class="img-responsive" alt="" />
+							</div>
+							<div class="entry-content">
+								<h6><a href="#">焦点2</a></h6>
+								<p><a href="#">Admin</a> &nbsp;/&nbsp; 2015-10-03</p>
+							</div>
+							<div class="clearfix"> </div>
+						</article>
+					</li>
+					<li>
+						<article class="entry-item">
+							<div class="entry-thumb pull-left">
+								<img src="images/t16.jpg" class="img-responsive" alt="" />
+							</div>
+							<div class="entry-content">
+								<h6><a href="#">焦点3</a></h6>
+								<p><a href="#">Admin</a> &nbsp;/&nbsp; 2015-10-03</p>
+							</div>
+							<div class="clearfix"> </div>
+						</article>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-8 detail">
+			<!-- <img src="images/event.jpg" class="img-responsive" alt=""/> -->
+				<h3 id="newsTitle">Event Title</h3>
+				<ul class="meta-post">
+					<li class="author">
+						by <a href="#" id="userName">Admin</a>
+					</li>
+					<li class="view" id="createTime">
+						15.10.15
+					</li>
+					<li class="category" id="location">
+						Conference Hall
+					</li>
+					<li class="readcount" id="readcount">
+						2015次
+					</li>
+				</ul>
+				<p id="content">"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
+					aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+					Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
+					dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit
+					amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam
+					aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit
+					laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea
+					voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla
+					pariatur?"</p>
+				<div class="author-box author-box1">
+					<div class="author-box-left"><img src="images/t13.png" class="img-responsive" alt="" /></div>
+					<div class="author-box-right">
+						<h4>作者 <a href="#">admin</a></h4>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<div class="comment_section">
+					<h4>1 评论</h4>
+					<ul class="comment-list">
+						<li>
+							<div class="author-box">
+								<div class="author-box_left"><img src="images/t13.png" class="img-responsive" alt="" /></div>
+								<div class="author-box_right">
+									<h5><a href="#">Admin</a><span class="pull-right"><a class="comment-reply-link"
+												href="#">回复</a></span></h5>
+									<span class="m_1">2019-05-16 19:19:36</span>
+									<p>评论吧啦吧啦吧啦吧啦吧啦吧啦吧啦吧啦吧啦吧啦</p>
+
+								</div>
+								<div class="clearfix"> </div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<form class="comment-form">
+					<h4>留下评论</h4>
+					<div id="commentAlerts" class="alert alert-danger" style="display: none">错误！请进行一些更改。</div>
+					<div class="col-md-6 comment-form-left" >
+						<input type="text" placeholder="Your Name" value="" id="author" name="author" class="form-control">
+						<input type="text" class="form-control" placeholder="Your Email" value="" id="email" name="email">
+					</div>
+					<div class="col-md-6 comment-form-right">
+						<textarea name="comment" aria-required="true" id="comment" class="form-control"
+							placeholder="Comment"></textarea>
+					</div>
+					<div class="clearfix"> </div>
+					<div class="form-submit">
+						<input name="submit" type="button" id="submit" class="submit_1 btn btn-primary btn-block"
+							value="发表评论" onclick="onSubmit()">
+					</div>
+				</form>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="container">
+			<div class="col-md-3 grid_4">
+				<h3>关于我们</h3>
+				<p> 北京化工大学创办于1958年，原名北京化工学院，是新中国为“培养尖端科学技术所需求的高级化工人才”而创建的一所高水平大学。作为教育部直属的全国重点大学，
+				国家“211工程”和“‘985’优势学科创新平台”重点建设院校，国家“一流学科”建设高校，北京化工大学肩负着高层次创新人才培养和基础性、前瞻性科学研究以及原创性高新技术开发的使命。</p>
+				<ul class="social-nav icons_2 clearfix">
+					<li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
+					<li><a href="#" class="facebook"> <i class="fa fa-facebook"></i></a></li>
+					<li><a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a></li>
+				</ul>
+			</div>
+			<div class="col-md-3 grid_4">
+				<h3>链接</h3>
+				<ul class="footer_list">
+					<li><a href="#">- 链接地址1111 </a></li>
+					<li><a href="#">- 链接地址2222</a></li>
+					<li><a href="#">- 链接地址3333</a></li>
+					<li><a href="#">- 链接地址4444</a></li>
+					<li><a href="#">- 链接地址5555</a></li>
+				</ul>
+			</div>
+			<div class="col-md-3 grid_4">
+				<h3>联系我们</h3>
+				<address>
+					<abbr>电话 : </abbr> +1 (734) 123-4567
+					<br>
+					<abbr>邮箱 : </abbr> <a href="mailto@example.com">info(at)Learn.com</a>
+				</address>
+			</div>
+			<div class="col-md-3 grid_4">
+				<h3>工作时间</h3>
+				<table class="table_working_hours">
+					<tbody>
+						<tr class="opened_1">
+							<td class="day_label">monday</td>
+							<td class="day_value">9:30 am - 6.00 pm</td>
+						</tr>
+						<tr class="opened">
+							<td class="day_label">tuesday</td>
+							<td class="day_value">9:30 am - 6.00 pm</td>
+						</tr>
+						<tr class="opened">
+							<td class="day_label">wednesday</td>
+							<td class="day_value">9:30 am - 6.00 pm</td>
+						</tr>
+						<tr class="opened">
+							<td class="day_label">thursday</td>
+							<td class="day_value">9:30 am - 6.00 pm</td>
+						</tr>
+						<tr class="opened">
+							<td class="day_label">friday</td>
+							<td class="day_value">9:30 am - 3.00 pm</td>
+						</tr>
+						<tr class="closed">
+							<td class="day_label">saturday</td>
+							<td class="day_value closed"><span></span></td>
+						</tr>
+						<tr class="closed">
+							<td class="day_label">sunday</td>
+							<td class="day_value closed"><span></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="clearfix"> </div>
+			<div class="copy">
+				<p>Copyright &copy; 2015.Company name All rights reserved.<a target="_blank"
+						href="#">spxin</a></p>
+			</div>
+		</div>
+	</div>
+	<!-- FlexSlider -->
+	<link href="css/flexslider.css" rel='stylesheet' type='text/css' />
+	<script defer src="js/jquery.flexslider.js"></script>
+	<script type="text/javascript" src="/shiyanshi/js/ajax.js"></script>
+	<script type="text/javascript" src="/shiyanshi/js/dateTime.js"></script>
+	<script type="text/javascript">
+	function getQueryString(name) { 
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+        var r = window.location.search.substr(1).match(reg); 
+        if (r != null) return unescape(r[2]); 
+        return null; 
+    }
+
+		$(function () {
+			console.log(window.location.search);
+			getAjax("/shiyanshi/NewsController/news/"+getQueryString("id")+".do",{},(data)=>{
+				var news = data['newsVo'];
+				$("#newsTitle").html(news.newsName);
+				$('#userName').html(news.author);
+				$('#createTime').html(datetimeFormat(news.createTime));
+				$('#location').html(news.location);
+				$('#readcount').html("阅读次数: "+news.readcount+"次");
+				$('#content').html(data['newsVo'].content);
+				$('.comment-list').html('');
+				var list = data['list'];
+				for(var i=0;i<list.length;i++){
+					$('.comment-list').append('<li>' +
+							'<div class="author-box">' +
+							'<div class="author-box_left"><img src="images/t13.png" class="img-responsive" alt="" /></div>' +
+							'<div class="author-box_right">' +
+							'<h5><a href="#">'+list[i].author+'</a><span class="pull-right"><a class="comment-reply-link" thref="#">回复</a></span></h5>' +
+							'<span class="m_1">'+datetimeFormat(list[i].createTime)+'</span>' +
+							'<p>'+list[i].content+'</p>' +
+							'</div>' +
+							'<div class="clearfix"> </div>' +
+							'</div>' +
+							'</li>');
+			}
+			});
+
+			SyntaxHighlighter.all();
+			
+		});
+	//校验参数
+		function checkParam(){
+			if($('#author').val()==''||$('#author').val()==null){
+				console.log("作者没有填写");
+				$('#commentAlerts').text('错误，作者没有填写')
+				$("#commentAlerts").show();
+				return false;
+
+			}
+
+			else if($('#email').val()==''||$('#email').val()==null){
+				console.log("邮箱没有填写");
+				$('#commentAlerts').text('错误，邮箱没有填写')
+				$("#commentAlerts").show();
+				return false;
+			}
+			else if($('#comment').val()==''||$('#comment').val()==null){
+				console.log("评论内容不能为空")
+				$('#commentAlerts').text('错误，评论内容不能为空')
+				$("#commentAlerts").show();
+				return false;
+			}else {
+				$("#commentAlerts").hide()
+			}
+			return true;
+		}
+		//提交评论
+		function onSubmit(){
+			if(checkParam()) {
+				postAjax('/shiyanshi/NewsController/' + getQueryString("id") + '/comments.do', {
+					author: $('#author').val(),
+					email: $('#email').val(),
+					content: $('#comment').val()
+				},(data)=>{
+					console.log("true");
+					location.reload();
+				}
+			);
+			}
+		}
+
+		$(window).load(function () {
+			$('.flexslider').flexslider({
+				animation: "slide",
+				start: function (slider) {
+					$('body').removeClass('loading');
+				}
+			});
+		});
+	</script>
+	<!-- FlexSlider -->
+</body>
+
+</html>

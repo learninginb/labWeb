@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.KnowledgeReadingDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.knowledge.KnowledgeReading">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="knowledge_id" property="knowledgeId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="about_operation" property="aboutOperation" jdbcType="VARCHAR" />
+		<result column="read_time" property="readTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+    <resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.knowledge.KnowledgeReadingVo">
+		<result column="knowledge_title" property="knowledgeTitle" jdbcType="VARCHAR" />
+		<result column="knowledge_type" property="knowledgeType" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,knowledge_id,user_id,about_operation,read_time
+	</sql>
+
+	 <!-- 分页数据 -->    
+	<select id="findListByPage" resultMap="BaseResultVoMap" parameterType="com.simulation.vo.knowledge.KnowledgeReadingVo">
+  		select t.*,o.knowledge_title as knowledgeTitle,u.user_name as userName,s.knowledge_type as knowledgeType
+  	      from t_knowledge_reading t left join t_knowledge o on t.knowledge_id = o.id
+  	      							 left join t_sys_user u on t.user_id = u.id
+  	      							 left join t_knowledge_type s on o.knowledge_type = s.id
+  	      	where 1=1 
+		  	<if test="vo.id != null ">and t.id = #{ vo.id }</if>
+		  	<if test="vo.knowledgeId != null ">and t.knowledge_id = #{ vo.knowledgeId }</if>
+		  	<if test="vo.userId != null ">and t.user_id = #{ vo.userId }</if>
+		  	<if test="vo.aboutOperation != null  and '' != vo.aboutOperation ">and t.about_operation = #{ vo.aboutOperation }</if>
+		  	<if test="vo.readTime != null ">and t.read_time = #{ vo.readTime }</if>
+		  	<if test="vo.knowledgeTitle != null and '' != vo.knowledgeTitle ">and o.knowledge_title = #{ vo.knowledgeTitle }</if>
+		  	<if test="vo.userName != null and '' != vo.userName ">and u.user_name = #{ vo.userName }</if>
+  	</select>      
+  
+	<!-- 根据主键获取对象 -->  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_knowledge_reading
+	  where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取表所有数据 -->    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+      from t_knowledge_reading
+    </select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	  delete from t_knowledge_reading
+	  where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.knowledge.KnowledgeReading" useGeneratedKeys="true" keyProperty="id">
+       insert into t_knowledge_reading (
+		id,knowledge_id,user_id,about_operation,read_time)values ( 
+		#{id,jdbcType=INTEGER},#{knowledgeId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},#{aboutOperation,jdbcType=VARCHAR},#{readTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.knowledge.KnowledgeReading" useGeneratedKeys="true" keyProperty="id" >
+	   insert into t_knowledge_reading
+ 		<trim prefix="(" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">id,</if>
+	  		<if test="knowledgeId != null ">knowledge_id,</if>
+	  		<if test="userId != null ">user_id,</if>
+	  		<if test="aboutOperation != null ">about_operation,</if>
+	  		<if test="readTime != null ">read_time,</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+	  		<if test="knowledgeId != null ">#{knowledgeId,jdbcType=INTEGER},</if>
+	  		<if test="userId != null ">#{userId,jdbcType=INTEGER},</if>
+	  		<if test="aboutOperation != null ">#{aboutOperation,jdbcType=VARCHAR},</if>
+	  		<if test="readTime != null ">#{readTime,jdbcType=TIMESTAMP},</if>
+ 		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.knowledge.KnowledgeReading" >
+	   update t_knowledge_reading
+		<set >
+			<if test="id != null ">
+		  	id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="knowledgeId != null ">
+		  	knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null ">
+		  	user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="aboutOperation != null ">
+		  	about_operation = #{aboutOperation,jdbcType=VARCHAR},
+			</if>
+			<if test="readTime != null ">
+		  	read_time = #{readTime,jdbcType=TIMESTAMP},
+			</if>
+	    </set>
+	   where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	 <!-- 根据对象主键更新 -->    
+  	<update id="updateByPrimaryKey" parameterType="com.simulation.model.knowledge.KnowledgeReading" >
+       update t_knowledge_reading
+       set 
+	      id = #{id,jdbcType=INTEGER},
+	      knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+	      user_id = #{userId,jdbcType=INTEGER},
+	      about_operation = #{aboutOperation,jdbcType=VARCHAR},
+	      read_time = #{readTime,jdbcType=TIMESTAMP}
+	   where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.simulation.model.knowledge.KnowledgeReading" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_knowledge_reading where 1=1
+			<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="knowledgeId != null ">
+			AND  knowledge_id = #{knowledgeId,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null ">
+			AND  user_id = #{userId,jdbcType=INTEGER}
+			</if>
+			<if test="aboutOperation != null ">
+			AND  about_operation = #{aboutOperation,jdbcType=VARCHAR}
+			</if>
+			<if test="readTime != null ">
+			AND  read_time = #{readTime,jdbcType=TIMESTAMP}
+			</if>
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteByIds" >
+	   delete from t_knowledge_reading
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+	</delete>
+	
+	<!-- 查询最新纪录 -->  
+	<select id="selectLastestReading" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select
+	  <include refid="Base_Column_List" />
+	  from t_knowledge_reading where 1=1
+	  		<if test="knowledgeId != null ">
+				AND  knowledge_id = #{knowledgeId,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null ">
+				AND  user_id = #{userId,jdbcType=INTEGER}
+			</if>
+			order by read_time desc
+			limit 1
+	</select>
+</mapper>   

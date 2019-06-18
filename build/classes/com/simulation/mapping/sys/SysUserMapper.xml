@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.sys.SysUserDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.sys.SysUser">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+		<result column="reg_ip" property="regIp" jdbcType="VARCHAR" />
+		<result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+		<result column="last_login_err_time" property="lastLoginErrTime" jdbcType="TIMESTAMP" />
+		<result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" />
+		<result column="id_number" property="idNumber" jdbcType="VARCHAR" />
+		<result column="login_err_times" property="loginErrTimes" jdbcType="INTEGER" />
+		<result column="user_type" property="userType" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+    <resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.sys.SysUserVo">
+
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,user_name,account,email,mobile_phone,password,reg_time,reg_ip,last_login_time,last_login_err_time,last_login_ip,id_number,login_err_times,user_type,status
+	</sql>
+	<!-- 查询所有用户的名字和id -->
+	<select id="findAllUserIdAndName" resultMap="BaseResultMap">
+	    select id,user_name from t_sys_user
+	    <where>
+	        <if test="location!=null and location !='' and location!='超级管理员'">
+	            location = #{location}
+	        </if>
+	    </where>
+	    
+	</select>
+	
+	 <!-- 分页数据 -->    
+	<select id="findListByPage" resultMap="BaseResultVoMap" parameterType="com.simulation.vo.sys.SysUserVo">
+  		select 
+  		<include refid="Base_Column_List" />
+  	      from t_sys_user where 1=1 
+		  	<if test="vo.id != null ">and id = #{ vo.id }</if>
+  	        <if test="vo.userName != null and '' != vo.userName ">and user_name = #{ vo.userName }</if>
+  	        <if test="vo.account != null and '' != vo.account ">and account = #{ vo.account }</if>
+  	        <if test="vo.email != null and '' != vo.email ">and email = #{ vo.email }</if>
+  	        <if test="vo.mobilePhone != null and '' != vo.mobilePhone ">and mobile_phone = #{ vo.mobilePhone }</if>
+  	        <if test="vo.password != null and '' != vo.password ">and password = #{ vo.password }</if>
+		  	<if test="vo.regTime != null ">and reg_time = #{ vo.regTime }</if>
+  	        <if test="vo.regIp != null and '' != vo.regIp ">and reg_ip = #{ vo.regIp }</if>
+		  	<if test="vo.lastLoginTime != null ">and last_login_time = #{ vo.lastLoginTime }</if>
+		  	<if test="vo.lastLoginErrTime != null ">and last_login_err_time = #{ vo.lastLoginErrTime }</if>
+  	        <if test="vo.lastLoginIp != null and '' != vo.lastLoginIp ">and last_login_ip = #{ vo.lastLoginIp }</if>
+  	        <if test="vo.idNumber != null and '' != vo.idNumber ">and id_number = #{ vo.idNumber }</if>
+		  	<if test="vo.loginErrTimes != null ">and login_err_times = #{ vo.loginErrTimes }</if>
+		  	<if test="vo.userType != null ">and user_type = #{ vo.userType }</if>
+		  	<if test="vo.status != null ">and status = #{ vo.status }</if>
+  	</select>      
+  
+	<!-- 根据主键获取对象 -->  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	  select 
+	  <include refid="Base_Column_List" />
+	  from t_sys_user
+	  where id = #{id,jdbcType=INTEGER}
+	</select>	
+	
+	 <!-- 获取表所有数据 -->    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+      from t_sys_user
+    </select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	  delete from t_sys_user
+	  where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.sys.SysUser" useGeneratedKeys="true" keyProperty="id">
+       insert into t_sys_user (
+		id,user_name,account,email,mobile_phone,password,reg_time,reg_ip,last_login_time,last_login_err_time,last_login_ip,id_number,login_err_times,user_type,status,location)values ( 
+		#{id,jdbcType=INTEGER},#{userName,jdbcType=VARCHAR},
+		#{account,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},
+		#{mobilePhone,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
+		#{regTime,jdbcType=TIMESTAMP},#{regIp,jdbcType=VARCHAR},
+		#{lastLoginTime,jdbcType=TIMESTAMP},#{lastLoginErrTime,jdbcType=TIMESTAMP},
+		#{lastLoginIp,jdbcType=VARCHAR},#{idNumber,jdbcType=VARCHAR},
+		#{loginErrTimes,jdbcType=INTEGER},#{userType,jdbcType=INTEGER},
+		#{status,jdbcType=INTEGER},#{location,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.sys.SysUser" useGeneratedKeys="true" keyProperty="id" >
+	   insert into t_sys_user
+ 		<trim prefix="(" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">id,</if>
+	  		<if test="userName != null ">user_name,</if>
+	  		<if test="account != null ">account,</if>
+	  		<if test="email != null ">email,</if>
+	  		<if test="mobilePhone != null ">mobile_phone,</if>
+	  		<if test="password != null ">password,</if>
+	  		<if test="regTime != null ">reg_time,</if>
+	  		<if test="regIp != null ">reg_ip,</if>
+	  		<if test="lastLoginTime != null ">last_login_time,</if>
+	  		<if test="lastLoginErrTime != null ">last_login_err_time,</if>
+	  		<if test="lastLoginIp != null ">last_login_ip,</if>
+	  		<if test="idNumber != null ">id_number,</if>
+	  		<if test="loginErrTimes != null ">login_err_times,</if>
+	  		<if test="userType != null ">user_type,</if>
+	  		<if test="status != null ">status,</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides="," >
+	  		<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+	  		<if test="userName != null ">#{userName,jdbcType=VARCHAR},</if>
+	  		<if test="account != null ">#{account,jdbcType=VARCHAR},</if>
+	  		<if test="email != null ">#{email,jdbcType=VARCHAR},</if>
+	  		<if test="mobilePhone != null ">#{mobilePhone,jdbcType=VARCHAR},</if>
+	  		<if test="password != null ">#{password,jdbcType=VARCHAR},</if>
+	  		<if test="regTime != null ">#{regTime,jdbcType=TIMESTAMP},</if>
+	  		<if test="regIp != null ">#{regIp,jdbcType=VARCHAR},</if>
+	  		<if test="lastLoginTime != null ">#{lastLoginTime,jdbcType=TIMESTAMP},</if>
+	  		<if test="lastLoginErrTime != null ">#{lastLoginErrTime,jdbcType=TIMESTAMP},</if>
+	  		<if test="lastLoginIp != null ">#{lastLoginIp,jdbcType=VARCHAR},</if>
+	  		<if test="idNumber != null ">#{idNumber,jdbcType=VARCHAR},</if>
+	  		<if test="loginErrTimes != null ">#{loginErrTimes,jdbcType=INTEGER},</if>
+	  		<if test="userType != null ">#{userType,jdbcType=INTEGER},</if>
+	  		<if test="status != null ">#{status,jdbcType=INTEGER},</if>
+ 		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.sys.SysUser" >
+	   update t_sys_user
+		<set >
+			<if test="id != null ">
+		  	id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="userName != null ">
+		  	user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="account != null ">
+		  	account = #{account,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null ">
+		  	email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="mobilePhone != null ">
+		  	mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null ">
+		  	password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="regTime != null ">
+		  	reg_time = #{regTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="regIp != null ">
+		  	reg_ip = #{regIp,jdbcType=VARCHAR},
+			</if>
+			<if test="lastLoginTime != null ">
+		  	last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastLoginErrTime != null ">
+		  	last_login_err_time = #{lastLoginErrTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastLoginIp != null ">
+		  	last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+			</if>
+			<if test="idNumber != null ">
+		  	id_number = #{idNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="loginErrTimes != null ">
+		  	login_err_times = #{loginErrTimes,jdbcType=INTEGER},
+			</if>
+			<if test="userType != null ">
+		  	user_type = #{userType,jdbcType=INTEGER},
+			</if>
+			<if test="status != null ">
+		  	status = #{status,jdbcType=INTEGER},
+			</if>
+	    </set>
+	   where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	 <!-- 根据对象主键更新 -->    
+  	<update id="updateByPrimaryKey" parameterType="com.simulation.model.sys.SysUser" >
+       update t_sys_user
+       set 
+	      id = #{id,jdbcType=INTEGER},
+	      user_name = #{userName,jdbcType=VARCHAR},
+	      account = #{account,jdbcType=VARCHAR},
+	      email = #{email,jdbcType=VARCHAR},
+	      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+	      password = #{password,jdbcType=VARCHAR},
+	      reg_time = #{regTime,jdbcType=TIMESTAMP},
+	      reg_ip = #{regIp,jdbcType=VARCHAR},
+	      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+	      last_login_err_time = #{lastLoginErrTime,jdbcType=TIMESTAMP},
+	      last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+	      id_number = #{idNumber,jdbcType=VARCHAR},
+	      login_err_times = #{loginErrTimes,jdbcType=INTEGER},
+	      user_type = #{userType,jdbcType=INTEGER},
+	      status = #{status,jdbcType=INTEGER}
+	   where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.simulation.model.sys.SysUser" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from t_sys_user where 1=1
+			<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="userName != null and '' != userName ">
+			AND  user_name = #{userName,jdbcType=VARCHAR}
+			</if>
+			<if test="account != null and '' != account ">
+			AND  account = #{account,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null and '' != email ">
+			AND  email = #{email,jdbcType=VARCHAR}
+			</if>
+			<if test="mobilePhone != null and '' != mobilePhone ">
+			AND  mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+			</if>
+			<if test="password != null and '' != password ">
+			AND  password = #{password,jdbcType=VARCHAR}
+			</if>
+			<if test="regTime != null ">
+			AND  reg_time = #{regTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="regIp != null and '' != regIp ">
+			AND  reg_ip = #{regIp,jdbcType=VARCHAR}
+			</if>
+			<if test="lastLoginTime != null ">
+			AND  last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="lastLoginErrTime != null ">
+			AND  last_login_err_time = #{lastLoginErrTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="lastLoginIp != null and '' != lastLoginIp ">
+			AND  last_login_ip = #{lastLoginIp,jdbcType=VARCHAR}
+			</if>
+			<if test="idNumber != null and '' != idNumber ">
+			AND  id_number = #{idNumber,jdbcType=VARCHAR}
+			</if>
+			<if test="loginErrTimes != null ">
+			AND  login_err_times = #{loginErrTimes,jdbcType=INTEGER}
+			</if>
+			<if test="userType != null ">
+			AND  user_type = #{userType,jdbcType=INTEGER}
+			</if>
+			<if test="status != null ">
+			AND  status = #{status,jdbcType=INTEGER}
+			</if>
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteByIds" >
+	   delete from t_sys_user
+	   where id in
+	      <foreach collection="ids" item="id" index="index"
+             open="(" close=")" separator=",">
+              #{id,jdbcType=INTEGER}
+          </foreach>
+	</delete>
+	
+	<!-- 查找用户 -->
+	<select id="findSingleUser" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM t_sys_user WHERE account = #{account,jdbcType=VARCHAR}  
+		UNION ALL  
+		SELECT * FROM t_sys_user WHERE  email = #{account,jdbcType=VARCHAR} 
+		UNION ALL  
+		SELECT * FROM t_sys_user WHERE  mobile_phone = #{account,jdbcType=VARCHAR} 
+		UNION ALL  
+		SELECT * FROM t_sys_user WHERE  id_number = #{account,jdbcType=VARCHAR}
+	</select>
+	
+	<!--指定条件查找用户是否存在-->
+	<select id="selectCountIsExist" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) total from t_sys_user where 1=1
+		<if test="account != null and account != '' ">
+			and account=#{account,jdbcType=VARCHAR}
+		</if>
+		<if test="email != null and email != '' ">
+			and email=#{email,jdbcType=VARCHAR}
+		</if>
+		<if test="mobilePhone != null and mobilePhone != '' ">
+			and mobile_phone=#{mobilePhone,jdbcType=VARCHAR}
+		</if>
+		<if test="idNumber != null and idNumber != '' ">
+			and id_number=#{idNumber,jdbcType=VARCHAR}
+		</if>
+		
+	</select>
+</mapper>   

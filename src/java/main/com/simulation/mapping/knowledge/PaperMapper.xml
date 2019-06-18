@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.knowledge.PaperDao">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.simulation.model.knowledge.Paper">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="introduction" property="introduction" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="create_user_id" property="create_user_id" jdbcType="INTEGER" />
+		<result column="update_user_id" property="update_user_id" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+		<result column="key_word" property="key_word" jdbcType="VARCHAR" />
+		<result column="important" property="important" jdbcType="INTEGER" />
+		<result column="file_url" property="file_url" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="BaseResultVoMap" extends="BaseResultMap" type="com.simulation.vo.knowledge.PaperVo">
+			<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+			<result column="key_wordString" property="key_wordString" jdbcType="VARCHAR" />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		id,name,introduction,status,create_user_id,update_user_id,create_time,update_time,key_word,important,file_url
+	</sql>
+
+	<!-- 分页数据 -->
+	<select id="findListByPage" resultMap="BaseResultVoMap"
+		parameterType="com.simulation.model.knowledge.Paper">
+		select
+		a.*,b.user_name
+		from t_paper a 
+		INNER JOIN t_sys_user b
+		on a.create_user_id = b.id <if test="location!=null and location!='' and location!='超级管理员'">and b.location = #{location}</if>
+		where 1=1
+		<if test="vo.id != null ">and id = #{ vo.id }</if>
+		<if test="vo.name != null and '' != vo.name ">and name = #{ vo.name }</if>
+		<if test="vo.status != null and '' != vo.status ">and status = #{ vo.status }</if>
+	</select>
+
+	<!-- 根据主键获取对象 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select t.* from t_paper t
+		where t.id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 获取表所有数据 -->
+	<select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_paper
+	</select>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_paper
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.simulation.model.knowledge.Paper"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_paper (
+		id,name,introduction,status,create_time,update_time,create_user_id,update_user_id,key_word,important,file_url)values
+		(
+		#{id,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+		#{introduction,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{create_time,jdbcType=TIMESTAMP},
+		#{update_time,jdbcType=TIMESTAMP},
+		#{create_user_id,jdbcType=INTEGER},
+		#{update_user_id,jdbcType=INTEGER},
+		#{key_word,jdbcType=VARCHAR},
+		#{important,jdbcType=INTEGER},
+		#{file_url,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 根据对象字段保存 -->
+	<insert id="insertSelective" parameterType="com.simulation.model.knowledge.Paper"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_data_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null ">id,</if>
+			<if test="name != null ">name,</if>
+			<if test="introduction != null ">introduction,</if>
+			<if test="status != null ">status,</if>
+			<if test="create_time != null ">create_time,</if>
+			<if test="update_time != null ">update_time,</if>
+			<if test="create_user_id != null ">create_user_id,</if>
+			<if test="update_user_id != null ">update_user_id,</if>
+			<if test="key_word != null ">key_word,</if>
+			<if test="important != null ">important,</if>
+			<if test="file_url != null ">file_url,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null ">#{id,jdbcType=INTEGER},</if>
+			<if test="name != null ">#{name,jdbcType=VARCHAR},</if>
+			<if test="introduction != null ">#{introduction,jdbcType=VARCHAR},</if>
+			<if test="status != null ">#{status,jdbcType=VARCHAR},</if>
+			<if test="create_time != null ">#{create_time,jdbcType=TIMESTAMP},</if>
+			<if test="update_time != null ">#{update_time,jdbcType=TIMESTAMP},</if>
+			<if test="create_user_id != null ">#{create_user_id,jdbcType=INTEGER},</if>
+			<if test="update_user_id != null ">#{update_user_id,jdbcType=INTEGER},</if>
+			<if test="key_word != null ">#{key_word,jdbcType=VARCHAR},</if>
+			<if test="important != null ">#{important,jdbcType=INTEGER},</if>
+			<if test="file_url != null ">#{file_url,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.simulation.model.knowledge.Paper">
+		update t_paper
+		<set>
+			<if test="id != null ">
+				id = #{id,jdbcType=INTEGER},
+			</if>
+			<if test="name != null ">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="introduction != null ">
+				introduction = #{introduction,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null ">
+				status =#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null ">
+				create_time =#{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="update_time != null ">
+				update_time =#{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="create_user_id != null ">
+				create_user_id =#{create_user_id,jdbcType=INTEGER},
+			</if>
+			<if test="create_time != null ">
+				create_user_id =#{create_user_id,jdbcType=INTEGER},
+			</if>
+			<if test="key_word != null ">
+			key_word=#{key_word,jdbcType=VARCHAR},
+			</if>
+			<if test="important != null ">
+			important=#{important,jdbcType=INTEGER},
+			</if>
+			<if test="file_url != null ">
+			file_url=#{file_url,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据对象主键更新 -->
+	<update id="updateByPrimaryKey" parameterType="com.simulation.model.knowledge.Paper">
+		update t_paper
+		set
+		id = #{id,jdbcType=INTEGER},
+		name =#{name,jdbcType=VARCHAR},
+		introduction =#{introduction,jdbcType=VARCHAR},
+		status =#{status,jdbcType=VARCHAR},
+		create_time =#{create_time,jdbcType=TIMESTAMP},
+		update_time =#{update_time,jdbcType=TIMESTAMP},
+		create_user_id =#{create_user_id,jdbcType=INTEGER},
+		update_user_id =#{update_user_id,jdbcType=INTEGER},
+		key_word =#{key_word,jdbcType=VARCHAR},
+		important =#{important,jdbcType=INTEGER},
+		file_url =#{file_url,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 查找记录 -->
+	<select id="selectList" parameterType="com.simulation.model.knowledge.Paper"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_paper where 1=1
+		<if test="id != null ">
+			AND id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="name != null ">
+			AND name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="introduction != null and '' != introduction ">
+			AND introduction = #{introduction,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and '' != status ">
+			AND status =#{status,jdbcType=VARCHAR}
+		</if>
+		<if test="create_time != null and '' != create_time ">
+			AND create_time =#{create_time,jdbcType=TIMESTAMP}
+		</if>
+		<if test="update_time != null and '' != update_time ">
+			AND update_time =#{update_time,jdbcType=TIMESTAMP}
+		</if>
+		<if test="create_user_id != null and '' != create_user_id ">
+			AND create_user_id =#{create_user_id,jdbcType=INTEGER}
+		</if>
+		<if test="update_user_id != null and '' != update_user_id ">
+			AND update_user_id =#{update_user_id,jdbcType=INTEGER}
+		</if>
+		<if test="key_word != null ">
+			AND key_word=#{key_word,jdbcType=VARCHAR}
+		</if>
+		<if test="important != null ">
+			AND important=#{important,jdbcType=INTEGER}
+		</if>
+		<if test="file_url != null ">
+			AND file_url=#{file_url,jdbcType=VARCHAR}
+		</if>
+		
+	</select>
+
+	<!--批量删除 -->
+	<delete id="deleteByIds">
+		delete from t_paper
+		where id in
+		<foreach collection="ids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+
+	
+
+	<!-- 用于添加时重复性校验 -->
+	<select id="selectObj" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_paper where 1=1
+		<if test="name != null ">
+			AND name = #{name,jdbcType=VARCHAR}
+		</if>
+		order by id
+	</select>
+
+	<!--批量删除时校验 -->
+	<select id="deleteAll" >
+		delete from t_paper
+	</select>
+</mapper>   

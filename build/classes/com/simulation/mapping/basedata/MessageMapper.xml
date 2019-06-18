@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simulation.dao.mybatis.basedata.MessageDao">
+     <resultMap type="com.simulation.vo.basedata.MessageVo" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="receiver_id" property="receiverId" jdbcType="INTEGER"/>
+       	<result column="receiver" property="receiver" jdbcType="VARCHAR"/>
+       	<result column="type" property="type" jdbcType="VARCHAR"/>
+       	<result column="content" property="content" jdbcType="VARCHAR"/>
+       	<result column="message_url" property="messageUrl" jdbcType="VARCHAR"/>
+       	<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+       	<result column="isread" property="isRead" jdbcType="INTEGER"/>
+    </resultMap>
+
+    
+
+    <insert id="addMessage" parameterType="com.simulation.vo.basedata.MessageVo">
+        insert into t_message(receiver_id,type,content,message_url,create_time,isread)
+        values(
+        	<if test="message.receiverId!=null and message.receiverId!=0">
+        	    #{message.receiverId,jdbcType=INTEGER},
+        	</if>	
+        	 <if test="message.type!=null and message.type!=''">
+            	#{message.type,jdbcType=VARCHAR},
+        	</if>
+        	<if test="message.content!=null and message.content!=''">
+            	#{message.content,jdbcType=VARCHAR},
+        	</if>
+         	<if test="message.messageUrl!=null and message.messageUrl!=''">
+           	 	#{message.messageUrl,jdbcType=VARCHAR},
+        	</if>
+        	<if test="message.createTime!=null">
+            	#{message.createTime,jdbcType=TIMESTAMP},
+        	</if>
+        	<if test="message.isRead!=null">
+        	    #{message.isRead,jdbcType=INTEGER}
+        	</if>	
+        )
+    </insert> 
+    
+    <select id="findMessage" parameterType="com.simulation.vo.basedata.MessageVo" resultMap="BaseResultMap">
+        select m.*,u.user_name receiver from t_message m,t_sys_user u
+        where receiver_id = #{message.receiverId} and u.id = m.receiver_id
+    </select>
+    <select id="findMessageCount" parameterType="com.simulation.vo.basedata.MessageVo" resultType="Integer">
+        select count(*) from t_message
+        where receiver_id = #{message.receiverId} and isread=0
+    </select>
+    <select id="findListByPage" resultMap="BaseResultMap">
+        select m.*,u.user_name receiver from t_message m,t_sys_user u
+        where receiver_id = #{message.receiverId} and u.id = m.receiver_id
+    </select>
+    
+    <update id="changeMessage" parameterType="com.simulation.vo.basedata.MessageVo">
+        update t_message
+        <set>
+	        <if test="message.isRead!=null and message.isRead==1">
+	            isread = 1,
+	        </if>
+	        <if test="message.type!=null and message.type!=''">
+	            type=#{message.type,jdbcType=VARCHAR},
+	        </if>
+	        <if test="message.content!=null and message.content!=''">
+	            content=#{message.content,jdbcType=VARCHAR},
+	        </if>
+	        <if test="message.messageUrl!=null and message.messageUrl!=''">
+	            message_url=#{message.messageUrl,jdbcType=VARCHAR},
+	        </if>
+	         <if test="message.createTime!=null">
+	            create_time = #{message.createTime},
+	        </if>
+	        <if test="message.receiverId!=null and message.receiverId!=0">
+	            receiver_id = #{message.receiverId,jdbcType=INTEGER}
+	        </if>
+        </set> 
+        where id = #{message.id,jdbcType=INTEGER}
+    </update>
+</mapper>
